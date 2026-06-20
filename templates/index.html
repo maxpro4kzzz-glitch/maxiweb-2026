@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+    <meta charset="UTF-8">
+    <title>Maxiweb 2026</title>
+</head>
+<body>
+    <div id="btn-menu" onclick="abrirMenu()">[ Menú ]</div>
+
+    <div id="mi-menu" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="cerrarMenu()">&times;</a>
+        <a href="/">Registro</a>
+        <a href="/foro">Foro público</a>
+        <a href="/juego">Juegos</a>
+    </div>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="mensaje-flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <h1>¡bienvenido a maxiweb 2026!</h1>
+
+    
+
+<hr>
+
+    <style>
+    /* Estilo para las burbujas */
+    .foro-container { max-width: 600px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 10px; border: 1px solid #ddd; }
+    .mensaje-burbuja { background-color: #dcf8c6; padding: 10px; margin: 10px 0; border-radius: 8px; width: fit-content; max-width: 80%; }
+    .btn-admin { text-align: right; margin-top: 10px; }
+</style>
+
+<div class="foro-container">
+    <h3>Foro Público</h3>
+    <form action="/enviar_mensaje" method="POST">
+        <textarea name="contenido" placeholder="Escribe tu mensaje..." required style="width: 100%;"></textarea>
+        <button type="submit">Publicar mensaje</button>
+    </form>
+
+    <hr>
+    <h4>Mensajes:</h4>
+    {% for msg in mensajes %}
+    <div class="mensaje-burbuja">
+        <strong>{{ msg.author }}</strong><br>
+        {{ msg.content }}
+        <br>
+        <small style="color: #666; font-size: 0.75em;">
+    {{ msg.timestamp.strftime('%d/%m/%Y %I:%M %p') }}
+</small>
+    </div>
+    {% endfor %}
+    </div>
+
+{% if session.get('es_owner') %}
+<div class="btn-admin" style="max-width: 600px; margin: 0 auto;">
+    <form action="/limpiar-foro" method="POST">
+        <input type="password" name="codigo" placeholder="Código de seguridad" required>
+        <button type="submit" style="background: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">
+            Limpiar Foro
+        </button>
+    </form>
+</div>
+{% endif %}
+
+    <button id="btn-tema">Activar/Desactivar Tema Oscuro</button>
+    <br><br>
+
+    <a href="/juego">Ir al juego de adivinanza</a> | <a href="/visitantes">Ver lista de visitantes</a>
+
+    <script>
+    // --- Lógica del Tema ---
+    const btn = document.getElementById('btn-tema');
+
+    // 1. Al cargar la página, verificamos si ya había un tema guardado
+    if (localStorage.getItem('tema') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+
+    btn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        
+        // 2. Guardamos la preferencia actual en el navegador
+        if (document.body.classList.contains('dark-mode')) {
+            localStorage.setItem('tema', 'dark');
+        } else {
+            localStorage.removeItem('tema');
+        }
+    });
+
+    // --- Funciones para el Menú Lateral ---
+    function abrirMenu() {
+        document.getElementById("mi-menu").style.width = "250px";
+    }
+
+    function cerrarMenu() {
+        document.getElementById("mi-menu").style.width = "0";
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+:root {
+    --bg-color: #f0f8ff;
+    --text-color: #2c3e50;
+    --input-bg: white;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #121212;
+        --text-color: #e0e0e0;
+        --input-bg: #333333;
+    }
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: Arial, sans-serif;
+    text-align: center;
+    font-size: 18px; /* Tamaño unificado */
+    padding: 15px;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+input, select, button {
+    font-size: 1.1em;
+    padding: 12px;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 10px;
+    display: block;
+    margin-left: auto; /* Centra los elementos */
+    margin-right: auto;
+    background-color: var(--input-bg);
+    border: 1px solid #555;
+    color: var(--text-color);
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.info-juego {
+    background-color: #222;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #444;
+}
+
+.alerta {
+    color: #00ffcc;
+    font-weight: bold;
+}
+
+/* --- Menú Lateral --- */
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    background-color: #0b3d0b;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidebar a {
+    padding: 15px 25px;
+    text-decoration: none;
+    font-size: 22px;
+    color: white;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #1a5e1a;
+}
+
+/* Botón de Menú limpio */
+#btn-menu {
+    position: fixed !important;
+    top: 15px !important;
+    left: 15px !important;
+    z-index: 9999 !important;
+    background-color: #0b3d0b !important; /* Verde oscuro elegante */
+    color: white !important;
+    padding: 10px 20px !important;
+    cursor: pointer !important;
+    border-radius: 5px !important;
+    font-size: 16px !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Para que el título no quede tapado por el botón */
+h1 {
+    margin-top: 50px !important;
+}
+/* Esto dice: Cuando el body tenga la clase dark-mode, cambia los colores */
+body.dark-mode {
+    background-color: #222 !important;
+    color: white !important;
+}
+
+/* Opcional: para que los formularios también cambien */
+body.dark-mode input, 
+body.dark-mode textarea, 
+body.dark-mode select {
+    background-color: #444 !important;
+    color: white !important;
+    border: 1px solid #666 !important;
+}
+/* Contenedor principal de mensajes */
+.foro-container {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+/* Burbuja de mensaje individual */
+.mensaje-burbuja {
+    background-color: #dcf8c6; /* Verde claro tipo WhatsApp */
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #c8e6c9;
+}

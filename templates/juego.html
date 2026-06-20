@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Juego de Maxiweb</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 6 </head>
+</head>
+<body style="background-color: #121212; color: white; font-family: sans-serif; padding: 20px;">
+    <h1>Juego: Adivina el número</h1>
+    <p>Rango actual: de 1 a {{ rango }}</p>
+    <p>Intentos: <strong>{{ intentos }} / {{ limite }}</strong></p>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <p style="color: yellow; font-weight: bold;">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    
+    <form method="POST">
+        <input type="number" name="intento" placeholder="Tu número" required>
+        <button type="submit">Adivinar</button>
+    </form>
+
+    <hr>
+    <form method="POST">
+        <select name="dificultad">
+            <option value="facil">Fácil (1-10)</option>
+            <option value="normal">Normal (1-20)</option>
+            <option value="dificil">Difícil (1-50)</option>
+        </select>
+        <button type="submit">Cambiar dificultad</button>
+    </form>
+
+    <br>
+    <a href="/" style="color: #007bff;">Volver al inicio</a>
+</body>
+</html>

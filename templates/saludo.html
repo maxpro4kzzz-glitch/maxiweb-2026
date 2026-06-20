@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+    <title>Bienvenida</title>
+</head>
+<body>
+    <!-- Este es el mensaje que Python nos enviará -->
+    <div>
+        {{ mensaje_saludo | safe }}
+    </div>
+    <br>
+    <a href='/visitantes'>Ver lista de visitas</a>
+</body>
+</html>

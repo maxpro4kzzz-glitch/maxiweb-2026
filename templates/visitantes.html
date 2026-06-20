@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Visitantes</title>
+</head>
+<body>
+    <h1>Visitantes registrados</h1>
+    <ul>
+        {% for v in lista %}
+            <li>{{ v.nombre }} {{ v.apellido }} - {{ v.nacionalidad }} ({{ v.ciudad }})</li>
+        {% endfor %}
+    </ul>
+    <a href="/">Volver al inicio</a>
+</body>
+</html>
