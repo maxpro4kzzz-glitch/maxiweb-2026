@@ -18,7 +18,7 @@ def login_requerido(f):
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'una_clave_muy_secreta'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///foro.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'sqlite:///foro.db'
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
