@@ -41,12 +41,12 @@ class Message(db.Model):
     content = db.Column(db.String(500), nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
 
-with app.app_context():
-    db.create_all()
-    if not User.query.filter_by(username='Admin').first():
-        admin = User(username='Admin', password='password123')
-        db.session.add(admin)
-        db.session.commit()
+#with app.app_context():
+#    db.create_all()
+#    if not User.query.filter_by(username='Admin').first():
+#        admin = User(username='Admin', password='password123')
+#        db.session.add(admin)
+#       db.session.commit()
 # --- RUTA DE REGISTRO (SIN EL ESCUDO) ---
 @app.route('/')
 def login():
