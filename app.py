@@ -46,7 +46,7 @@ with app.app_context():
     if not User.query.filter_by(username='Admin').first():
         admin = User(username='Admin', password='password123')
         db.session.add(admin)
-       db.session.commit() 
+        db.session.commit()
 # --- RUTA DE REGISTRO (SIN EL ESCUDO) ---
 @app.route('/')
 def login():
@@ -197,4 +197,4 @@ def ver_visitantes():
     return render_template("visitantes.html", lista=visitantes)
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port)# Comentario de prueba para forzar cambio
