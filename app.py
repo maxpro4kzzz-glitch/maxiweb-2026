@@ -46,7 +46,7 @@ class Message(db.Model):
 #    if not User.query.filter_by(username='Admin').first():
 #        admin = User(username='Admin', password='password123')
 #        db.session.add(admin)
-#       db.session.commit()
+#       db.session.commit() 
 # --- RUTA DE REGISTRO (SIN EL ESCUDO) ---
 @app.route('/')
 def login():
