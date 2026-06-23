@@ -3,9 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Juego de Maxiweb</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 6 </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
 </head>
 <body style="background-color: #121212; color: white; font-family: sans-serif; padding: 20px;">
+    <div id="btn-menu" onclick="abrirMenu()">[ Menú ]</div>
+
+    <div id="mi-menu" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="cerrarMenu()">&times;</a>
+        {% if current_user.is_authenticated %}
+            <a href="/mi-cuenta">Mi Cuenta</a>
+        {% else %}
+            <a href="/">Registro / Login</a>
+        {% endif %}
+        <a href="/foro">Foro público</a> 
+        <a href="/juego">Juegos</a>
+    </div>
     <h1>Juego: Adivina el número</h1>
     <p>Rango actual: de 1 a {{ rango }}</p>
     <p>Intentos: <strong>{{ intentos }} / {{ limite }}</strong></p>
@@ -32,7 +45,10 @@
         <button type="submit">Cambiar dificultad</button>
     </form>
 
-    <br>
-    <a href="/" style="color: #007bff;">Volver al inicio</a>
+    
+    <script>
+    function abrirMenu() { document.getElementById("mi-menu").style.width = "250px"; }
+    function cerrarMenu() { document.getElementById("mi-menu").style.width = "0"; }
+</script>
 </body>
 </html>

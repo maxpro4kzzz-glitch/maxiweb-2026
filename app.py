@@ -125,8 +125,8 @@ def limpiar_foro():
     # 4. Redirigimos de vuelta al foro para que el usuario nunca vea una página en blanco
     return redirect(url_for('index'))
 
-@app.route('/perfil', methods=['POST'])
-def perfil():
+@app.route('/resgistrar', methods=['POST'])
+def registrar():
     username = request.form.get('username')
     password = request.form.get('password')
     
@@ -181,6 +181,12 @@ def perfil():
         flash(f"¡{bienvenida} {nombre}! Qué lindo que nos visites desde {nacionalidad}.")
         
     return redirect(url_for('index'))
+
+# --- Nueva ruta para ver el perfil ---
+@app.route('/mi-cuenta')
+@login_requerido
+def mi_cuenta():
+    return render_template("perfil.html")
 
 @app.route('/juego', methods=['GET', 'POST'])
 @login_requerido  # <--- Agrega esto también

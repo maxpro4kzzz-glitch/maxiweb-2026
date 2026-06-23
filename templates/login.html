@@ -9,11 +9,17 @@
     <div id="btn-menu" onclick="abrirMenu()">[ Menú ]</div>
 
     <div id="mi-menu" class="sidebar">
-        <a href="javascript:void(0)" class="closebtn" onclick="cerrarMenu()">&times;</a>
+    <a href="javascript:void(0)" class="closebtn" onclick="cerrarMenu()">&times;</a>
+    
+    {% if current_user.is_authenticated %}
+        <a href="/mi-cuenta">Mi Cuenta</a>
+    {% else %}
         <a href="/">Registro / Login</a>
-        <a href="/foro">Foro público</a> 
-        <a href="/juego">Juegos</a>
-    </div>
+    {% endif %}
+    
+    <a href="/foro">Foro público</a> 
+    <a href="/juego">Juegos</a>
+</div>
 
     <h1>Bienvenido</h1>
     
@@ -22,7 +28,7 @@
         <button onclick="mostrarForm('login')">Ya tengo cuenta (Login)</button>
     </div>
 
-    <form id="form-registro" action="/perfil" method="POST" style="display:none;">
+    <form id="form-registro" action="/registrar" method="POST" style="display:none;">
         <h3>Crear nueva cuenta</h3>
         <input type="text" name="nombre" placeholder="Nombre" required>
         <input type="text" name="apellido" placeholder="Apellido" required>
