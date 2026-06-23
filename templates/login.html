@@ -32,7 +32,8 @@
             <option value="{{ s }}" {% if session.get('signo') == s %}selected{% endif %}>{{ s }}</option>
         {% endfor %}
     </select>
-
+ <input type="text" name="username" placeholder="Nombre de usuario (Login)" required>
+<input type="password" name="password" placeholder="Contraseña" required>
     <button type="submit">Actualizar / Guardar perfil</button>
 </form>
 <script>

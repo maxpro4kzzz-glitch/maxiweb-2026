@@ -7,6 +7,7 @@ import random
 import os
 from functools import wraps
 
+
 def login_requerido(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -17,6 +18,7 @@ def login_requerido(f):
     return decorated_function
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 app.config['SECRET_KEY'] = 'una_clave_muy_secreta'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'sqlite:///foro.db'
 db = SQLAlchemy(app)
@@ -29,7 +31,7 @@ visitantes = []
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -41,8 +43,8 @@ class Message(db.Model):
     content = db.Column(db.String(500), nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
 
-#with app.app_context():
-#    db.create_all()
+with app.app_context():
+    db.create_all()
 #    if not User.query.filter_by(username='Admin').first():
 #        admin = User(username='Admin', password='password123')
 #        db.session.add(admin)
@@ -107,6 +109,20 @@ def limpiar_foro():
 
 @app.route('/perfil', methods=['POST'])
 def perfil():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    
+    if username and password:
+        usuario_existente = User.query.filter_by(username=username).first()
+        if not usuario_existente:
+            hashed_pw = bcrypt.generate_password_hash(password).decode('utf-8')
+            nuevo_usuario = User(username=username, password_hash=hashed_pw)
+            db.session.add(nuevo_usuario)
+            db.session.commit()
+            flash("Usuario registrado correctamente.")
+        else:
+            flash("El nombre de usuario ya existe.")
+    # --- Fin del código nuevo ---
     session.permanent = True  # Para que la sesión dure 30 días
     
     # Capturamos todos los datos del formulario
