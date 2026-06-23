@@ -131,16 +131,31 @@ def limpiar_foro():
     # 4. Redirigimos de vuelta al foro para que el usuario nunca vea una página en blanco
     return redirect(url_for('index'))
 
-@app.route('/resgistrar', methods=['POST'])
+@app.route('/registrar', methods=['POST'])
 def registrar():
     username = request.form.get('username')
     password = request.form.get('password')
-    
+    # Capturamos los otros campos
+    nombre = request.form.get('nombre')
+    apellido = request.form.get('apellido')
+    nacionalidad = request.form.get('nacionalidad')
+    ciudad = request.form.get('ciudad')
+    signo = request.form.get('signo')
+    genero = request.form.get('genero')
     if username and password:
         usuario_existente = User.query.filter_by(username=username).first()
         if not usuario_existente:
             hashed_pw = bcrypt.generate_password_hash(password).decode('utf-8')
-            nuevo_usuario = User(username=username, password_hash=hashed_pw)
+            nuevo_usuario = User(
+                username=username, 
+                password_hash=hashed_pw,
+                nombre=nombre,
+                apellido=apellido,
+                ciudad=ciudad,
+                nacionalidad=nacionalidad,
+                genero=genero,
+                signo=signo
+            )
             db.session.add(nuevo_usuario)
             db.session.commit()
             flash("Usuario registrado correctamente.")
