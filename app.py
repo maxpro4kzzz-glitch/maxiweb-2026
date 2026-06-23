@@ -7,6 +7,7 @@ from pytz import timezone
 import random
 import os
 from functools import wraps
+from flask_login import login_required, current_user
 
 
 def login_requerido(f):

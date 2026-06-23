@@ -9,15 +9,18 @@
     <div id="btn-menu" onclick="abrirMenu()">[ Menú ]</div>
 
     <div id="mi-menu" class="sidebar">
-        <a href="javascript:void(0)" class="closebtn" onclick="cerrarMenu()">&times;</a>
-        {% if current_user.is_authenticated %}
-        <a href="/perfil">Mi Cuenta</a>
+    <a href="javascript:void(0)" class="closebtn" onclick="cerrarMenu()">&times;</a>
+    
+    {% if current_user.is_authenticated %}
+        <a href="/mi-cuenta">Mi Cuenta</a>
+        <a href="/logout">Cerrar Sesión</a>
     {% else %}
-        <a href="/">Registro</a>
+        <a href="/">Registro / Login</a>
     {% endif %}
-        <a href="/foro">Foro público</a>
-        <a href="/juego">Juegos</a>
-    </div>
+    
+    <a href="/foro">Foro público</a> 
+    <a href="/juego">Juegos</a>
+</div>
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         {% for message in messages %}
