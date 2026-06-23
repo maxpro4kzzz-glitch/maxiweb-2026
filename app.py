@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, current_user
+from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
 from pytz import timezone
 import random
@@ -79,7 +80,7 @@ def login_ruta():
             flash("Usuario o contraseña incorrectos.")
             
     return render_template("login.html")
-    
+
 @app.route('/enviar_mensaje', methods=['POST'])
 def enviar_mensaje():
     # Obtenemos los datos de la sesión del usuario
