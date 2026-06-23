@@ -41,7 +41,7 @@ def load_user(user_id):
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    author = db.Column(db.String(50), nullable=False)
+    username = db.Column(db.String(80), nullable=False) # <--- Cambiamos 'author' por 'username'
     content = db.Column(db.String(500), nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
 
@@ -82,25 +82,25 @@ def login_ruta():
     return render_template("login.html")
 
 @app.route('/enviar_mensaje', methods=['POST'])
+@login_requerido # Protegemos la ruta para asegurarnos de que tenemos un usuario logueado
 def enviar_mensaje():
-    # Obtenemos los datos de la sesión del usuario
-    nombre = session.get('nombre', 'Anónimo')
-    apellido = session.get('apellido', '')
+    # Obtenemos el username del usuario logueado en lugar de usar sesiones manuales
+    nombre_usuario = current_user.username
     
-    # Armamos el nombre del autor
-    autor = f"{nombre} {apellido}"
-    
-    # Si el usuario es el Owner, le agregamos la etiqueta
-    if session.get('es_owner'):
-        autor += " (Owner)"
+    # Lógica de la etiqueta Owner: 
+    # Si el nombre de usuario es 'maximo' (ajusta si usas mayúsculas), se marca como Owner
+    if nombre_usuario.lower() == 'maximo':
+        nombre_usuario += " (Owner)"
         
     contenido = request.form.get('contenido')
     
-    # --- AQUÍ LA MAGIA PARA LA HORA ---
+    # --- Gestión de la hora ---
     arg_tz = timezone('America/Argentina/Buenos_Aires')
     hora_arg = datetime.now(arg_tz)
-    # 2. Creamos el objeto del mensaje incluyendo el timestamp
-    nuevo_mensaje = Message(author=autor, content=contenido, timestamp=hora_arg)
+    
+    # Creamos el objeto del mensaje usando 'username' (ajustado al modelo que cambiaremos)
+    # IMPORTANTE: Asegúrate de que en tu clase Message la columna se llame 'username'
+    nuevo_mensaje = Message(username=nombre_usuario, content=contenido, timestamp=hora_arg)
     
     db.session.add(nuevo_mensaje)
     db.session.commit()

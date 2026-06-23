@@ -7,7 +7,7 @@
     <h1>Visitantes registrados</h1>
     <ul>
         {% for v in lista %}
-            <li>{{ v.nombre }} {{ v.apellido }} - {{ v.nacionalidad }} ({{ v.ciudad }})</li>
+            <li>{{ v.username }} - {{ v.nacionalidad }} ({{ v.ciudad }})</li>
         {% endfor %}
     </ul>
     <a href="/">Volver al inicio</a>

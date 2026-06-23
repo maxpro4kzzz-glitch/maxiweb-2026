@@ -46,8 +46,8 @@
     <h4>Mensajes:</h4>
     {% for msg in mensajes %}
     <div class="mensaje-burbuja">
-        <strong>{{ msg.author }}</strong><br>
-        {{ msg.content }}
+    <strong>{{ msg.username }}</strong><br>
+    {{ msg.content }}
         <br>
         <small style="color: #666; font-size: 0.75em;">
     {{ msg.timestamp.strftime('%d/%m/%Y %I:%M %p') }}
