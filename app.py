@@ -35,10 +35,12 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
-    # Agrega esto:
+    # Asegúrate de que TODOS estos existan:
     nombre = db.Column(db.String(100))
     apellido = db.Column(db.String(100))
     ciudad = db.Column(db.String(100))
+    nacionalidad = db.Column(db.String(100)) # <--- ESTE ES EL QUE FALTABA
+    genero = db.Column(db.String(50))
     signo = db.Column(db.String(50))
 
 @login_manager.user_loader
