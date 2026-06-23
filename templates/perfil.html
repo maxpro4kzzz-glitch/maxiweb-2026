@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Perfil</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+</head>
+<body style="background-color: #121212; color: white; font-family: sans-serif; padding: 20px;">
+    <h1>Perfil de {{ current_user.username }}</h1>
+    <p>Bienvenido a tu área personal.</p>
+    
+    <ul>
+        <li><strong>Nombre:</strong> {{ current_user.nombre }}</li>
+        <li><strong>Ciudad:</strong> {{ current_user.ciudad }}</li>
+        <li><strong>Signo:</strong> {{ current_user.signo }}</li>
+    </ul>
+
+    <a href="/logout" style="color: #ff4444;">Cerrar Sesión</a>
+    <br><br>
+    <a href="/foro" style="color: #007bff;">Ir al Foro</a>
+</body>
+</html>
