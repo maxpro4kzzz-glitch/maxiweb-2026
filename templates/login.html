@@ -2,48 +2,66 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registro</title>
+    <title>Acceso al Foro</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
 </head>
 <body>
-     <div id="btn-menu" onclick="abrirMenu()">[ Menú ]</div>
+    <div id="btn-menu" onclick="abrirMenu()">[ Menú ]</div>
 
     <div id="mi-menu" class="sidebar">
-    <a href="javascript:void(0)" class="closebtn" onclick="cerrarMenu()">&times;</a>
-    <a href="/">Registro / Perfil</a>
-    <a href="/foro">Foro público</a> <a href="/juego">Juegos</a>
-</div>
-    <h1>Bienvenido, por favor regístrate</h1>
-   <form action="/perfil" method="POST">
-    <input type="text" name="nombre" value="{{ session.get('nombre', '') }}" placeholder="Nombre" required>
-    <input type="text" name="apellido" value="{{ session.get('apellido', '') }}" placeholder="Apellido" required>
-    <input type="text" name="ciudad" value="{{ session.get('ciudad', '') }}" placeholder="Ciudad" required>
-    <input type="text" name="nacionalidad" value="{{ session.get('nacionalidad', '') }}" placeholder="Nacionalidad" required>
+        <a href="javascript:void(0)" class="closebtn" onclick="cerrarMenu()">&times;</a>
+        <a href="/">Registro / Login</a>
+        <a href="/foro">Foro público</a> 
+        <a href="/juego">Juegos</a>
+    </div>
 
-    <label>Género:</label>
-    <select name="genero">
-        <option value="hombre" {% if session.get('genero') == 'hombre' %}selected{% endif %}>Hombre</option>
-        <option value="mujer" {% if session.get('genero') == 'mujer' %}selected{% endif %}>Mujer</option>
-    </select>
+    <h1>Bienvenido</h1>
+    
+    <div style="margin-bottom: 20px;">
+        <button onclick="mostrarForm('registro')">Registrarse (Nuevo usuario)</button>
+        <button onclick="mostrarForm('login')">Ya tengo cuenta (Login)</button>
+    </div>
 
-    <label>Tu signo:</label>
-    <select name="signo">
-        {% for s in ['Aries', 'Tauro', 'Geminis', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Escorpio', 'Sagitario', 'Capricornio', 'Acuario', 'Piscis'] %}
-            <option value="{{ s }}" {% if session.get('signo') == s %}selected{% endif %}>{{ s }}</option>
-        {% endfor %}
-    </select>
- <input type="text" name="username" placeholder="Nombre de usuario (Login)" required>
-<input type="password" name="password" placeholder="Contraseña" required>
-    <button type="submit">Actualizar / Guardar perfil</button>
-</form>
-<script>
-    function abrirMenu() {
-        document.getElementById("mi-menu").style.width = "250px";
-    }
+    <form id="form-registro" action="/perfil" method="POST" style="display:none;">
+        <h3>Crear nueva cuenta</h3>
+        <input type="text" name="nombre" placeholder="Nombre" required>
+        <input type="text" name="apellido" placeholder="Apellido" required>
+        <input type="text" name="ciudad" placeholder="Ciudad" required>
+        <input type="text" name="nacionalidad" placeholder="Nacionalidad" required>
+        
+        <label>Género:</label>
+        <select name="genero">
+            <option value="hombre">Hombre</option>
+            <option value="mujer">Mujer</option>
+        </select>
 
-    function cerrarMenu() {
-        document.getElementById("mi-menu").style.width = "0";
-    }
-</script>
+        <label>Tu signo:</label>
+        <select name="signo">
+            {% for s in ['Aries', 'Tauro', 'Geminis', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Escorpio', 'Sagitario', 'Capricornio', 'Acuario', 'Piscis'] %}
+                <option value="{{ s }}">{{ s }}</option>
+            {% endfor %}
+        </select>
+        
+        <input type="text" name="username" placeholder="Nombre de usuario" required>
+        <input type="password" name="password" placeholder="Contraseña" required>
+        <button type="submit">Registrarse</button>
+    </form>
+
+    <form id="form-login" action="/login" method="POST" style="display:none;">
+        <h3>Iniciar Sesión</h3>
+        <input type="text" name="username" placeholder="Nombre de usuario" required>
+        <input type="password" name="password" placeholder="Contraseña" required>
+        <button type="submit">Entrar</button>
+    </form>
+
+    <script>
+        function abrirMenu() { document.getElementById("mi-menu").style.width = "250px"; }
+        function cerrarMenu() { document.getElementById("mi-menu").style.width = "0"; }
+        
+        function mostrarForm(tipo) {
+            document.getElementById('form-registro').style.display = (tipo === 'registro') ? 'block' : 'none';
+            document.getElementById('form-login').style.display = (tipo === 'login') ? 'block' : 'none';
+        }
+    </script>
 </body>
 </html>

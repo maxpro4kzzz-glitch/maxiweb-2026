@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, UserMixin, login_user, current_user
 from datetime import datetime, timedelta
 from pytz import timezone
 import random
@@ -11,9 +11,9 @@ from functools import wraps
 def login_requerido(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if 'nombre' not in session:
-            flash("Por favor, regístrate primero.")
-            return redirect(url_for('login')) # O redirígelo a un login si tienes
+        if not current_user.is_authenticated:
+            flash("Por favor, inicia sesión primero.")
+            return redirect(url_for('login_ruta')) # Esta ruta la crearemos luego
         return f(*args, **kwargs)
     return decorated_function
 
@@ -28,7 +28,8 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 # Lista de visitantes que ya tenías
 visitantes = []
 
-class User(db.Model):
+# Cámbialo por esto:
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
@@ -63,6 +64,22 @@ def index():
     # Ordenamos por fecha descendente (lo último primero)
     return render_template("index.html", mensajes=mensajes)
 
+@app.route('/login', methods=['GET', 'POST'])
+def login_ruta():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = User.query.filter_by(username=username).first()
+
+        if user and bcrypt.check_password_hash(user.password_hash, password):
+            login_user(user)
+            flash("¡Bienvenido de nuevo!")
+            return redirect(url_for('index'))
+        else:
+            flash("Usuario o contraseña incorrectos.")
+            
+    return render_template("login.html")
+    
 @app.route('/enviar_mensaje', methods=['POST'])
 def enviar_mensaje():
     # Obtenemos los datos de la sesión del usuario
