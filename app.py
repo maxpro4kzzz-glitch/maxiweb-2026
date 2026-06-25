@@ -90,15 +90,19 @@ def login_ruta():
     return render_template("login.html")
 
 @app.route('/enviar_mensaje', methods=['POST'])
-@login_requerido # Protegemos la ruta para asegurarnos de que tenemos un usuario logueado
+@login_requerido
 def enviar_mensaje():
-    # Obtenemos el username del usuario logueado en lugar de usar sesiones manuales
-    nombre_usuario = current_user.username
+    # Creamos el nombre completo del usuario que está logueado
+    nombre_completo = f"{current_user.nombre} {current_user.apellido}".lower()
     
-    # Lógica de la etiqueta Owner: 
-    # Si el nombre de usuario es 'maximo' (ajusta si usas mayúsculas), se marca como Owner
-    if nombre_usuario.lower() == 'maximo':
-        nombre_usuario += " (Owner)"
+    # El nombre que se mostrará en el foro
+    nombre_para_mostrar = current_user.username 
+    
+    # Verificamos si la combinación es un Administrador o el Owner
+    if nombre_completo == 'máximo dippolito':
+        nombre_para_mostrar += " (Owner)"
+    elif nombre_completo == 'gabriel brest':
+        nombre_para_mostrar += " (Admin)"
         
     contenido = request.form.get('contenido')
     
@@ -106,9 +110,8 @@ def enviar_mensaje():
     arg_tz = timezone('America/Argentina/Buenos_Aires')
     hora_arg = datetime.now(arg_tz)
     
-    # Creamos el objeto del mensaje usando 'username' (ajustado al modelo que cambiaremos)
-    # IMPORTANTE: Asegúrate de que en tu clase Message la columna se llame 'username'
-    nuevo_mensaje = Message(username=nombre_usuario, content=contenido, timestamp=hora_arg)
+    # Usamos nombre_para_mostrar para el registro en la base de datos
+    nuevo_mensaje = Message(username=nombre_para_mostrar, content=contenido, timestamp=hora_arg)
     
     db.session.add(nuevo_mensaje)
     db.session.commit()
