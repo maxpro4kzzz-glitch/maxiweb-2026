@@ -72,7 +72,6 @@ from sqlalchemy import text
 
 with app.app_context():
     # BORRAMOS LA TABLA VIEJA PARA QUE SE CREE LA NUEVA CON TODAS LAS COLUMNAS
-    db.drop_all() 
     db.create_all()
     print("Base de datos recreada con todos los campos.")
 # --- RUTA DE REGISTRO (SIN EL ESCUDO) ---
