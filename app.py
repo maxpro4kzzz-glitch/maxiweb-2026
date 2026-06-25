@@ -71,18 +71,10 @@ from sqlalchemy import text
 # ... (todo tu código anterior)
 
 with app.app_context():
-    # Intentamos crear las tablas si no existen
+    # BORRAMOS LA TABLA VIEJA PARA QUE SE CREE LA NUEVA CON TODAS LAS COLUMNAS
+    db.drop_all() 
     db.create_all()
-    
-    # Intentamos agregar la columna si no existe (esto evita el error 500)
-    try:
-        db.session.execute(text('ALTER TABLE "user" ADD COLUMN password_hash VARCHAR(255);'))
-        db.session.commit()
-        print("Columna password_hash agregada correctamente.")
-    except Exception as e:
-        # Si da error, probablemente es porque la columna ya existe, así que ignoramos
-        db.session.rollback()
-        print("La columna ya existía o hubo un error al intentar agregarla:", e)
+    print("Base de datos recreada con todos los campos.")
 # --- RUTA DE REGISTRO (SIN EL ESCUDO) ---
 @app.route('/')
 def login():
