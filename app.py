@@ -22,12 +22,25 @@ def login_requerido(f):
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.config['SECRET_KEY'] = 'una_clave_muy_secreta'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'sqlite:///foro.db'
+
+# --- CONFIGURACIÓN DE BASE DE DATOS MEJORADA ---
+database_url = os.environ.get('DATABASE_URL')
+
+if database_url:
+    # Ajuste necesario para que SQLAlchemy entienda la URL de PostgreSQL de Render
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+else:
+    # Si estamos en local, usamos SQLite
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///foro.db'
+# --- FIN DE CONFIGURACIÓN ---
+
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
-# Lista de visitantes que ya tenías
+# Lista de visitantes
 visitantes = []
 
 # Cámbialo por esto:
