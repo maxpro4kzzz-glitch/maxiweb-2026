@@ -54,12 +54,13 @@ class Message(db.Model):
     timestamp = db.Column(db.DateTime, nullable=False)
 
 with app.app_context():
+    ruta_db = os.path.join(os.getcwd(), 'foro.db')
+    print(f"--- Intentando crear/acceder a la base de datos en: {ruta_db} ---")
     db.create_all()
-    print("Base de datos inicializada/actualizada")
-#    if not User.query.filter_by(username='Admin').first():
-#        admin = User(username='Admin', password='password123')
-#        db.session.add(admin)
-#        db.session.commit()
+    if os.path.exists(ruta_db):
+        print("¡Éxito! El archivo foro.db existe en el servidor.")
+    else:
+        print("¡ERROR! El archivo foro.db NO se creó.")
 # --- RUTA DE REGISTRO (SIN EL ESCUDO) ---
 @app.route('/')
 def login():
