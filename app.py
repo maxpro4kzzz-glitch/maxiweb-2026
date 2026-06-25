@@ -55,6 +55,7 @@ class Message(db.Model):
 
 with app.app_context():
     db.create_all()
+    print("Base de datos inicializada/actualizada")
 #    if not User.query.filter_by(username='Admin').first():
 #        admin = User(username='Admin', password='password123')
 #        db.session.add(admin)
