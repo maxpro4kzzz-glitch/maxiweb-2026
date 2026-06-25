@@ -2,5 +2,6 @@ flask
 gunicorn
 flask-sqlalchemy
 flask-login
+Flask-Bcrypt
 pytz
 psycopg2-binary
