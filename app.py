@@ -66,14 +66,23 @@ class Message(db.Model):
     content = db.Column(db.String(500), nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
 
+from sqlalchemy import text
+
+# ... (todo tu código anterior)
+
 with app.app_context():
-    ruta_db = os.path.join(os.getcwd(), 'foro.db')
-    print(f"--- Intentando crear/acceder a la base de datos en: {ruta_db} ---")
+    # Intentamos crear las tablas si no existen
     db.create_all()
-    if os.path.exists(ruta_db):
-        print("¡Éxito! El archivo foro.db existe en el servidor.")
-    else:
-        print("¡ERROR! El archivo foro.db NO se creó.")
+    
+    # Intentamos agregar la columna si no existe (esto evita el error 500)
+    try:
+        db.session.execute(text('ALTER TABLE "user" ADD COLUMN password_hash VARCHAR(255);'))
+        db.session.commit()
+        print("Columna password_hash agregada correctamente.")
+    except Exception as e:
+        # Si da error, probablemente es porque la columna ya existe, así que ignoramos
+        db.session.rollback()
+        print("La columna ya existía o hubo un error al intentar agregarla:", e)
 # --- RUTA DE REGISTRO (SIN EL ESCUDO) ---
 @app.route('/')
 def login():
