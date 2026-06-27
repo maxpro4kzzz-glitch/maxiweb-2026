@@ -72,7 +72,7 @@ from sqlalchemy import text
 # ... (todo tu código anterior)
 
 with app.app_context():
-    db.drop_all()
+#    db.drop_all()
     # BORRAMOS LA TABLA VIEJA PARA QUE SE CREE LA NUEVA CON TODAS LAS COLUMNAS
     db.create_all()
     print("Base de datos recreada con todos los campos.")
@@ -264,9 +264,9 @@ def cambiar_password():
         # 1. Primero, verificamos el tiempo
         hace_7_dias = datetime.utcnow() - timedelta(days=7)
         
-        if current_user.ultimo_cambio_password > hace_7_dias:
-            flash("Debes esperar 7 días desde tu último cambio de contraseña.")
-            return redirect(url_for('mi_cuenta'))
+        if current_user.ultimo_cambio_password and current_user.ultimo_cambio_password > hace_7_dias:
+    flash("Debes esperar 7 días desde tu último cambio de contraseña.")
+    return redirect(url_for('mi_cuenta'))
 
         # 2. Ahora, validamos las contraseñas
         nueva_pass = request.form.get('new_password')

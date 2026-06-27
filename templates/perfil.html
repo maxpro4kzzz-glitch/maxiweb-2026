@@ -6,6 +6,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
 </head>
 <body style="background-color: #121212; color: white; font-family: sans-serif; padding: 20px;">
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <div style="background-color: #333; color: #fff; padding: 10px; margin-bottom: 10px; border: 1px solid #555;">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
     <h1>Perfil de {{ current_user.username }}</h1>
     <p>Bienvenido a tu área personal.</p>
     
