@@ -68,13 +68,14 @@ class Message(db.Model):
     username = db.Column(db.String(80), nullable=False) # <--- Cambiamos 'author' por 'username'
     content = db.Column(db.String(500), nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
+    es_editado = db.Column(db.Boolean, default=False)
 
 from sqlalchemy import text
 
 # ... (todo tu código anterior)
 
 with app.app_context():
-#    db.drop_all()
+    db.drop_all()
     # BORRAMOS LA TABLA VIEJA PARA QUE SE CREE LA NUEVA CON TODAS LAS COLUMNAS
     db.create_all()
     print("Base de datos recreada con todos los campos.")
