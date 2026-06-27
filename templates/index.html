@@ -36,21 +36,34 @@
 <hr>
 
     <style>
-    .foro-container { max-width: 600px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 10px; border: 1px solid #ddd; }
-    
-    /* Contenedor que alinea las burbujas */
-    .mensaje-contenedor { display: flex; width: 100%; margin: 10px 0; }
+    /* Estilos base para el foro */
+    .foro-container { max-width: 600px; margin: 20px auto; background: #fff; padding: 15px; border-radius: 10px; border: 1px solid #ddd; }
+
+    /* Contenedor de mensajes */
+    .mensaje-contenedor { display: flex; width: 100%; margin: 12px 0; }
     .mensaje-contenedor.mio { justify-content: flex-end; }
     .mensaje-contenedor.otro { justify-content: flex-start; }
 
-    /* Burbuja de mensaje */
-    .mensaje-burbuja { padding: 10px; margin: 0; border-radius: 8px; max-width: 80%; }
-    .mio .mensaje-burbuja { background-color: #dcf8c6; } /* Verde para ti */
-    .otro .mensaje-burbuja { background-color: #f1f0f0; } /* Gris para otros */
+    /* Burbujas */
+    .mensaje-burbuja { padding: 12px 16px; border-radius: 15px; max-width: 85%; font-size: 16px; line-height: 1.4; }
     
-    .btn-admin { text-align: right; margin-top: 10px; }
-</style>
+    /* Colores para modo claro */
+    .mio .mensaje-burbuja { background-color: #dcf8c6; color: #000; }
+    .otro .mensaje-burbuja { background-color: #f1f0f0; color: #000; }
 
+    /* MODO OSCURO: Ajustes de contraste */
+    body.dark-mode .foro-container { background: #2d2d2d; border-color: #444; }
+    body.dark-mode .otro .mensaje-burbuja { background-color: #3e3e3e; color: #fff; }
+    body.dark-mode .mio .mensaje-burbuja { background-color: #056162; color: #fff; }
+
+    /* Mejoras para CÉLULAR */
+    @media (max-width: 600px) {
+        .foro-container { margin: 10px; padding: 10px; }
+        textarea { height: 80px; font-size: 16px; } /* Evita zoom al hacer tap */
+        button { padding: 15px; font-size: 16px; width: 100%; }
+        .mensaje-burbuja { font-size: 17px; } /* Texto más grande para leer fácil */
+    }
+</style>
 <div class="foro-container">
     <h3>Foro Público</h3>
     <form action="/enviar_mensaje" method="POST">
