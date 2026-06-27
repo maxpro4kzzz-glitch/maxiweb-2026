@@ -48,6 +48,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
+    ultimo_cambio_password = db.Column(db.DateTime, default=datetime.utcnow)
     # Asegúrate de que TODOS estos existan:
     nombre = db.Column(db.String(100))
     apellido = db.Column(db.String(100))
@@ -254,6 +255,35 @@ def logout():
     logout_user()        # Te saca del club
     flash("Has cerrado sesión.")
     return redirect(url_for('login_ruta'))
+
+@app.route('/cambiar-password', methods=['GET', 'POST'])
+@login_required
+def cambiar_password():
+    if request.method == 'POST':
+        # 1. Primero, verificamos el tiempo
+        hace_7_dias = datetime.utcnow() - timedelta(days=7)
+        
+        if current_user.ultimo_cambio_password > hace_7_dias:
+            flash("Debes esperar 7 días desde tu último cambio de contraseña.")
+            return redirect(url_for('ver_perfil'))
+
+        # 2. Ahora, validamos las contraseñas
+        nueva_pass = request.form.get('new_password')
+        confirm_pass = request.form.get('confirm_password')
+
+        if nueva_pass != confirm_pass:
+            flash("Las contraseñas no coinciden.")
+            return redirect(url_for('cambiar_password'))
+
+        # 3. Si todo está OK, encriptamos y guardamos
+        current_user.password = bcrypt.generate_password_hash(nueva_pass).decode('utf-8')
+        current_user.ultimo_cambio_password = datetime.utcnow()
+        db.session.commit()
+        
+        flash("Contraseña actualizada con éxito.")
+        return redirect(url_for('ver_perfil'))
+        
+    return render_template("cambiar_password.html")
 
 @app.route('/juego', methods=['GET', 'POST'])
 @login_requerido  # <--- Agrega esto también
