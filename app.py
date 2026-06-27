@@ -265,8 +265,8 @@ def cambiar_password():
         hace_7_dias = datetime.utcnow() - timedelta(days=7)
         
         if current_user.ultimo_cambio_password and current_user.ultimo_cambio_password > hace_7_dias:
-    flash("Debes esperar 7 días desde tu último cambio de contraseña.")
-    return redirect(url_for('mi_cuenta'))
+            flash("Debes esperar 7 días desde tu último cambio de contraseña.")
+            return redirect(url_for('mi_cuenta'))
 
         # 2. Ahora, validamos las contraseñas
         nueva_pass = request.form.get('new_password')
