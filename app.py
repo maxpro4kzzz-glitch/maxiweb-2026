@@ -144,6 +144,11 @@ def enviar_mensaje():
     
     return redirect(url_for('index'))
 
+@app.route('/debug-usuario')
+@login_required
+def debug():
+    return f"Username actual: '{current_user.username}' | Es admin: {session.get('es_admin')}"
+
 @app.route('/limpiar-foro', methods=['POST'])
 @login_requerido
 def limpiar_foro():
