@@ -36,9 +36,18 @@
 <hr>
 
     <style>
-    /* Estilo para las burbujas */
     .foro-container { max-width: 600px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 10px; border: 1px solid #ddd; }
-    .mensaje-burbuja { background-color: #dcf8c6; padding: 10px; margin: 10px 0; border-radius: 8px; width: fit-content; max-width: 80%; }
+    
+    /* Contenedor que alinea las burbujas */
+    .mensaje-contenedor { display: flex; width: 100%; margin: 10px 0; }
+    .mensaje-contenedor.mio { justify-content: flex-end; }
+    .mensaje-contenedor.otro { justify-content: flex-start; }
+
+    /* Burbuja de mensaje */
+    .mensaje-burbuja { padding: 10px; margin: 0; border-radius: 8px; max-width: 80%; }
+    .mio .mensaje-burbuja { background-color: #dcf8c6; } /* Verde para ti */
+    .otro .mensaje-burbuja { background-color: #f1f0f0; } /* Gris para otros */
+    
     .btn-admin { text-align: right; margin-top: 10px; }
 </style>
 
@@ -52,13 +61,15 @@
     <hr>
     <h4>Mensajes:</h4>
     {% for msg in mensajes %}
-    <div class="mensaje-burbuja">
-    <strong>{{ msg.username }}</strong><br>
-    {{ msg.content }}
-        <br>
-        <small style="color: #666; font-size: 0.75em;">
-    {{ msg.timestamp.strftime('%d/%m/%Y %I:%M %p') }}
-</small>
+    <div class="mensaje-contenedor {{ 'mio' if current_user.username in msg.username else 'otro' }}">
+        <div class="mensaje-burbuja">
+            <strong>{{ msg.username }}</strong><br>
+            {{ msg.content }}
+            <br>
+            <small style="color: #666; font-size: 0.75em;">
+                {{ msg.timestamp.strftime('%d/%m/%Y %I:%M %p') }}
+            </small>
+        </div>
     </div>
     {% endfor %}
     </div>
