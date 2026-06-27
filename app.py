@@ -266,7 +266,7 @@ def cambiar_password():
         
         if current_user.ultimo_cambio_password > hace_7_dias:
             flash("Debes esperar 7 días desde tu último cambio de contraseña.")
-            return redirect(url_for('ver_perfil'))
+            return redirect(url_for('mi_cuenta'))
 
         # 2. Ahora, validamos las contraseñas
         nueva_pass = request.form.get('new_password')
@@ -282,7 +282,7 @@ def cambiar_password():
         db.session.commit()
         
         flash("Contraseña actualizada con éxito.")
-        return redirect(url_for('ver_perfil'))
+        return redirect(url_for('mi_cuenta'))
         
     return render_template("cambiar_password.html")
 
