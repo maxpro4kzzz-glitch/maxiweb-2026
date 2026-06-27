@@ -285,6 +285,12 @@ def ver_usuarios():
     lista = User.query.all()
     return "<br>".join([f"User: {u.username} | Nombre: {u.nombre}" for u in lista])
 
+@app.route('/reset-todo')
+def reset_todo():
+    db.drop_all()  # Borra todas las tablas (usuarios, mensajes, etc.)
+    db.create_all() # Crea las tablas de nuevo, vacías
+    return "Base de datos reiniciada. ¡Ya no hay usuarios ni mensajes!"
+    
 @app.route('/ver-sesion')
 def ver_sesion():
     # Te dice qué sabe el servidor de tu sesión actual
