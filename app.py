@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, current_user
+from flask_login import LoginManager, UserMixin, login_user, current_user, login_required, logout_user
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
 from pytz import timezone
 import random
 import os
 from functools import wraps
-from flask_login import login_required, current_user
+
 
 
 def login_requerido(f):
@@ -246,6 +246,14 @@ def registrar():
 @login_requerido
 def mi_cuenta():
     return render_template("perfil.html")
+
+# Esta función es el "botón de pánico" que borra todo y te desconecta
+@app.route('/logout')
+def logout():
+    session.clear()      # Borra la "lista del portero" (Admin, Owner, etc.)
+    logout_user()        # Te saca del club
+    flash("Has cerrado sesión.")
+    return redirect(url_for('login_ruta'))
 
 @app.route('/juego', methods=['GET', 'POST'])
 @login_requerido  # <--- Agrega esto también
