@@ -198,7 +198,7 @@ def registrar():
                 ciudad=ciudad,
                 nacionalidad=nacionalidad,
                 genero=genero,
-                signo=signo
+                signo=signo,
                 pregunta_seguridad=pregunta,
                 respuesta_seguridad=bcrypt.generate_password_hash(respuesta).decode('utf-8')
             )
