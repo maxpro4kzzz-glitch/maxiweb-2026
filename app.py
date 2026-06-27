@@ -97,7 +97,21 @@ def login_ruta():
 
         if user and bcrypt.check_password_hash(user.password_hash, password):
             login_user(user)
-            flash("¡Bienvenido de nuevo!")
+            
+            # --- LÓGICA DE ROLES ---
+            # Definimos si es Owner o Admin basándonos en el username
+            if user.username == 'maximo':
+                session['es_owner'] = True
+                session['es_admin'] = True # El owner también es admin
+            elif user.username == 'gabriel':
+                session['es_owner'] = False
+                session['es_admin'] = True
+            else:
+                session['es_owner'] = False
+                session['es_admin'] = False
+            # -----------------------
+            
+            flash("¡Bienvenido!")
             return redirect(url_for('index'))
         else:
             flash("Usuario o contraseña incorrectos.")
