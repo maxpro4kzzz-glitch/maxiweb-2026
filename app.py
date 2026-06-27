@@ -127,7 +127,7 @@ def enviar_mensaje():
     
    if user_lower == 'maximo':
         nombre_para_mostrar += " (Owner)"
-    elif user_lower == 'gabriel':
+   elif user_lower == 'gabriel':
         nombre_para_mostrar += " (Admin)"
         
     contenido = request.form.get('contenido')
