@@ -150,16 +150,8 @@ def limpiar_foro():
         
     # 4. Redirigimos de vuelta al foro para que el usuario nunca vea una página en blanco
     return redirect(url_for('index'))
-    
-@app.route('/ver-usuarios')
-def ver_usuarios():
-    # Esto consulta todos los usuarios de la base de datos
-    lista_usuarios = User.query.all()
-    html = "<h1>Usuarios registrados:</h1><ul>"
-    for u in lista_usuarios:
-        html += f"<li>{u.username} - {u.nombre} {u.apellido}</li>"
-    html += "</ul>"
-    return html 
+
+
 
 @app.route('/registrar', methods=['POST'])
 def registrar():
@@ -286,6 +278,17 @@ def juego():
 def ver_visitantes():
     # Esto busca en tu lista 'visitantes' y la muestra
     return render_template("visitantes.html", lista=visitantes)
+
+@app.route('/ver-usuarios')
+def ver_usuarios():
+    # Te lista todos los usuarios para ver si tienes duplicados
+    lista = User.query.all()
+    return "<br>".join([f"User: {u.username} | Nombre: {u.nombre}" for u in lista])
+
+@app.route('/ver-sesion')
+def ver_sesion():
+    # Te dice qué sabe el servidor de tu sesión actual
+    return f"Datos en sesión: {dict(session)}"
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)# Comentario de prueba para forzar cambio
