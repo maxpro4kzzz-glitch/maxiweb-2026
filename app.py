@@ -150,6 +150,7 @@ def limpiar_foro():
         
     # 4. Redirigimos de vuelta al foro para que el usuario nunca vea una página en blanco
     return redirect(url_for('index'))
+    
 @app.route('/ver-usuarios')
 def ver_usuarios():
     # Esto consulta todos los usuarios de la base de datos
