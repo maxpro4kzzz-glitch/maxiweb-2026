@@ -107,25 +107,22 @@ def login_ruta():
 @app.route('/enviar_mensaje', methods=['POST'])
 @login_requerido
 def enviar_mensaje():
-    # Creamos el nombre completo del usuario que está logueado
-    nombre_completo = f"{current_user.nombre} {current_user.apellido}".lower()
-    
-    # El nombre que se mostrará en el foro
+    # Usamos el username directamente
     nombre_para_mostrar = current_user.username 
     
-    # Verificamos si la combinación es un Administrador o el Owner
-    if nombre_completo == 'máximo dippolito':
+    # Verificamos usando el username, es mucho más seguro
+    if current_user.username == 'maximo':
         nombre_para_mostrar += " (Owner)"
-    elif nombre_completo == 'gabriel brest':
+    elif current_user.username == 'gabriel':
         nombre_para_mostrar += " (Admin)"
         
     contenido = request.form.get('contenido')
     
-    # --- Gestión de la hora ---
+    # Gestión de la hora
     arg_tz = timezone('America/Argentina/Buenos_Aires')
     hora_arg = datetime.now(arg_tz)
     
-    # Usamos nombre_para_mostrar para el registro en la base de datos
+    # Guardamos en la base de datos
     nuevo_mensaje = Message(username=nombre_para_mostrar, content=contenido, timestamp=hora_arg)
     
     db.session.add(nuevo_mensaje)
