@@ -177,6 +177,8 @@ def limpiar_foro():
 def registrar():
     username = request.form.get('username')
     password = request.form.get('password')
+    pregunta = request.form.get('pregunta')
+    respuesta = request.form.get('respuesta') # Capturamos la respuesta
     # Capturamos los otros campos
     nombre = request.form.get('nombre')
     apellido = request.form.get('apellido')
@@ -197,6 +199,8 @@ def registrar():
                 nacionalidad=nacionalidad,
                 genero=genero,
                 signo=signo
+                pregunta_seguridad=pregunta,
+                respuesta_seguridad=bcrypt.generate_password_hash(respuesta).decode('utf-8')
             )
             db.session.add(nuevo_usuario)
             db.session.commit()
