@@ -121,13 +121,13 @@ def login_ruta():
 @app.route('/enviar_mensaje', methods=['POST'])
 @login_requerido
 def enviar_mensaje():
+    user_lower = current_user.username.lower().strip()
     # Usamos el username directamente
     nombre_para_mostrar = current_user.username 
     
-    # Verificamos usando el username, es mucho más seguro
-    if current_user.username == 'maximo':
+   if user_lower == 'maximo':
         nombre_para_mostrar += " (Owner)"
-    elif current_user.username == 'gabriel':
+    elif user_lower == 'gabriel':
         nombre_para_mostrar += " (Admin)"
         
     contenido = request.form.get('contenido')
