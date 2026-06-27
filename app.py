@@ -150,6 +150,15 @@ def limpiar_foro():
         
     # 4. Redirigimos de vuelta al foro para que el usuario nunca vea una página en blanco
     return redirect(url_for('index'))
+@app.route('/ver-usuarios')
+def ver_usuarios():
+    # Esto consulta todos los usuarios de la base de datos
+    lista_usuarios = User.query.all()
+    html = "<h1>Usuarios registrados:</h1><ul>"
+    for u in lista_usuarios:
+        html += f"<li>{u.username} - {u.nombre} {u.apellido}</li>"
+    html += "</ul>"
+    return html 
 
 @app.route('/registrar', methods=['POST'])
 def registrar():
