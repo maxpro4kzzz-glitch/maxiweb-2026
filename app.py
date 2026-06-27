@@ -202,7 +202,7 @@ def registrar():
     session['genero'] = genero
     session['signo'] = signo
     # Lógica del Owner (Cambia 'tu_nombre' y 'tu_apellido' por los tuyos reales)
-    if nombre.lower() == 'maximo' and apellido.lower() == 'brest':
+    if nombre.lower() == 'maximo' and apellido.lower() == 'dippolito':
         session['es_owner'] = True
     else:
         session['es_owner'] = False
@@ -290,7 +290,7 @@ def reset_todo():
     db.drop_all()  # Borra todas las tablas (usuarios, mensajes, etc.)
     db.create_all() # Crea las tablas de nuevo, vacías
     return "Base de datos reiniciada. ¡Ya no hay usuarios ni mensajes!"
-    
+
 @app.route('/ver-sesion')
 def ver_sesion():
     # Te dice qué sabe el servidor de tu sesión actual
