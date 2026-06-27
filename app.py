@@ -56,6 +56,8 @@ class User(db.Model, UserMixin):
     nacionalidad = db.Column(db.String(100)) # <--- ESTE ES EL QUE FALTABA
     genero = db.Column(db.String(50))
     signo = db.Column(db.String(50))
+    pregunta_seguridad = db.Column(db.String(150), nullable=True) # La pregunta (ej: ¿Nombre de tu mascota?)
+    respuesta_seguridad = db.Column(db.String(150), nullable=True) # La respuesta encriptada
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -72,7 +74,7 @@ from sqlalchemy import text
 # ... (todo tu código anterior)
 
 with app.app_context():
-#    db.drop_all()
+    db.drop_all()
     # BORRAMOS LA TABLA VIEJA PARA QUE SE CREE LA NUEVA CON TODAS LAS COLUMNAS
     db.create_all()
     print("Base de datos recreada con todos los campos.")
@@ -286,6 +288,38 @@ def cambiar_password():
         
     return render_template("cambiar_password.html")
 
+@app.route('/recuperar-password', methods=['GET', 'POST'])
+def recuperar_password():
+    if request.method == 'POST':
+        # Paso 1: Buscar usuario
+        if 'buscar_usuario' in request.form:
+            username = request.form.get('username')
+            user = User.query.filter_by(username=username).first()
+            if user:
+                # Guardamos el usuario en la sesión para usarlo después
+                session['recuperar_user_id'] = user.id
+                return render_template('recuperar_password.html', pregunta=user.pregunta_seguridad, username=username)
+            else:
+                flash("Usuario no encontrado.")
+        
+        # Paso 2: Verificar respuesta y cambiar contraseña
+        elif 'verificar_y_cambiar' in request.form:
+            user_id = session.get('recuperar_user_id')
+            user = User.query.get(user_id)
+            respuesta_ingresada = request.form.get('respuesta')
+            
+            # Verificamos la respuesta (usando check_password_hash porque está encriptada)
+            if user and bcrypt.check_password_hash(user.respuesta_seguridad, respuesta_ingresada):
+                nueva_pass = request.form.get('new_password')
+                user.password_hash = bcrypt.generate_password_hash(nueva_pass).decode('utf-8')
+                db.session.commit()
+                flash("Contraseña restablecida con éxito.")
+                return redirect(url_for('login_ruta')) # Asumiendo que tu ruta de login se llama así
+            else:
+                flash("Respuesta incorrecta.")
+                
+    return render_template('recuperar_password.html')
+
 @app.route('/juego', methods=['GET', 'POST'])
 @login_requerido  # <--- Agrega esto también
 def juego():
@@ -340,11 +374,7 @@ def ver_usuarios():
     lista = User.query.all()
     return "<br>".join([f"User: {u.username} | Nombre: {u.nombre}" for u in lista])
 
-@app.route('/reset-todo')
-def reset_todo():
-    db.drop_all()  # Borra todas las tablas (usuarios, mensajes, etc.)
-    db.create_all() # Crea las tablas de nuevo, vacías
-    return "Base de datos reiniciada. ¡Ya no hay usuarios ni mensajes!"
+
 
 @app.route('/ver-sesion')
 def ver_sesion():
