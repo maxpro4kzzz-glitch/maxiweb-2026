@@ -158,6 +158,25 @@ def borrar_mensaje(id):
         db.session.commit()
     return redirect(url_for('index'))
 
+# --- RUTA PARA EDITAR MENSAJE ---
+@app.route('/editar-mensaje/<int:id>', methods=['GET', 'POST'])
+@login_requerido
+def editar_mensaje(id):
+    mensaje = Message.query.get_or_404(id)
+    
+    # Solo el dueño puede editar
+    if current_user.username not in mensaje.username:
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        nuevo_contenido = request.form['contenido']
+        mensaje.content = nuevo_contenido
+        mensaje.es_editado = True # Marcamos que fue editado
+        db.session.commit()
+        return redirect(url_for('index'))
+    
+    return render_template('editar.html', mensaje=mensaje)
+
 @app.route('/debug-usuario')
 @login_required
 def debug():

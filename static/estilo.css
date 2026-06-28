@@ -137,3 +137,8 @@ body.dark-mode select {
     border-radius: 8px;
     border: 1px solid #c8e6c9;
 }
+#menu-flotante a {
+    padding: 10px;
+    display: block;
+    color: black;
+}
