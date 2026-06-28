@@ -11,38 +11,27 @@
 <body>
     <canvas id="juegoCanvas" width="400" height="600"></canvas>
 
-    <script>
-        let estado = 'jugando'; // Nuevo estado
-        // 1. DECLARACIÓN
+ <script>
+        let estado = 'jugando';
         let girando = false;
-        let velocidadGiro = 0.06; // Velocidad de giro cuando mantienes presionado
-        let direccion = 1; // 1 para horario, -1 para anti-horario
-        let tiempoInicio = 0;
+        let velocidadGiro = 0.06;
+        let direccion = 1;
+        let tiempoInicio = Date.now(); // Inicializado aquí
         const canvas = document.getElementById('juegoCanvas');
         const ctx = canvas.getContext('2d');
         
         let angulo = 0;
-        let rotacion = 0.05;
         let velocidad = 2;
-        const aceleracion = 0.0005; // Un poco más suave para que dure más
+        const aceleracion = 0.0005;
         let obstaculos = [];
 
-        // 2. LÓGICA
-       function actualizarObstaculos() {
+        function actualizarObstaculos() {
             velocidad += aceleracion;
-
-            // Nueva condición: Solo creamos uno nuevo si no hay obstáculos 
-            // o si el último que creamos ya bajó al menos 200 píxeles
             let ultimoObstaculo = obstaculos[obstaculos.length - 1];
             let puedeCrear = obstaculos.length === 0 || (ultimoObstaculo && ultimoObstaculo.y > 250);
             
-            // Generar obstáculo cada cierto tiempo
-            if (Math.random() < 0.02) {
-                // AQUÍ ESTÁ EL CAMBIO:
-                // Generamos un número aleatorio entre 50 y 250
-                // Así los bloques aparecen en distintas posiciones horizontales
+            if (Math.random() < 0.02 && puedeCrear) {
                 let posicionX = Math.floor(Math.random() * 200) + 50; 
-                
                 obstaculos.push({ x: posicionX, y: -50, w: 100, h: 20 });
             }
 
@@ -50,105 +39,88 @@
                 obstaculos[i].y += velocidad;
             }
 
-            // Limpieza: borrar obstáculos fuera de pantalla
             if (obstaculos.length > 0 && obstaculos[0].y > canvas.height) {
                 obstaculos.shift();
             }
         }
-function verificarColision(puntoX, puntoY, obs) {
-            return puntoX > obs.x && 
-                   puntoX < obs.x + obs.w && 
-                   puntoY > obs.y && 
-                   puntoY < obs.y + obs.h;
+
+        function verificarColision(puntoX, puntoY, obs) {
+            return puntoX > obs.x && puntoX < obs.x + obs.w && 
+                   puntoY > obs.y && puntoY < obs.y + obs.h;
         }
 
         function dibujar() {
-            if (estado === 'gameover') {
-        ctx.fillStyle = 'white';
-        ctx.font = '30px Arial';
-        ctx.fillText('GAME OVER', 120, 300);
-        ctx.fillText('Toca para reiniciar', 80, 350);
-        return; 
-    }
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Dibujar el tiempo
-            let tiempoActual = ((Date.now() - tiempoInicio) / 1000).toFixed(1);
-            ctx.fillStyle = 'white';
-            ctx.font = '20px Arial';
-            ctx.fillText('Tiempo: ' + tiempoActual + 's', 20, 30);
-            
-            // Dibujar obstáculos
-            actualizarObstaculos();
-            ctx.fillStyle = 'white';
-            for (let obs of obstaculos) {
-                ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
+            if (estado === 'gameover') {
+                ctx.fillStyle = 'white';
+                ctx.font = '30px Arial';
+                ctx.fillText('GAME OVER', 120, 300);
+                ctx.fillText('Toca para reiniciar', 80, 350);
+            } else {
+                // Dibujar el tiempo
+                let tiempoActual = ((Date.now() - tiempoInicio) / 1000).toFixed(1);
+                ctx.fillStyle = 'white';
+                ctx.font = '20px Arial';
+                ctx.fillText('Tiempo: ' + tiempoActual + 's', 20, 30);
+                
+                actualizarObstaculos();
+                ctx.fillStyle = 'white';
+                for (let obs of obstaculos) {
+                    ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
+                }
+
+                ctx.save();
+                ctx.translate(200, 300);
+                ctx.rotate(angulo);
+                
+                let pxRojo = 100 * Math.cos(angulo);
+                let pyRojo = 100 * Math.sin(angulo);
+                let pxAzul = 100 * Math.cos(angulo + Math.PI);
+                let pyAzul = 100 * Math.sin(angulo + Math.PI);
+
+                let colision = false;
+                for (let obs of obstaculos) {
+                    let obsAjustado = { x: obs.x - 200, y: obs.y - 300, w: obs.w, h: obs.h };
+                    if (verificarColision(pxRojo, pyRojo, obsAjustado) || 
+                        verificarColision(pxAzul, pyAzul, obsAjustado)) {
+                        estado = 'gameover';
+                        colision = true;
+                    }
+                }
+
+                ctx.fillStyle = colision ? 'yellow' : 'red';
+                ctx.beginPath(); ctx.arc(100, 0, 10, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = colision ? 'yellow' : 'blue';
+                ctx.beginPath(); ctx.arc(-100, 0, 10, 0, Math.PI * 2); ctx.fill();
+                ctx.restore();
+
+                if (girando) {
+                    angulo += (velocidadGiro * direccion);
+                }
             }
-
-            // --- AQUÍ EMPIEZA LA LÓGICA DE LOS PUNTOS ---
-            ctx.save();
-            ctx.translate(200, 300);
-            ctx.rotate(angulo);
-            
-            // Calcular posiciones reales para detectar el choque
-            let pxRojo = 100 * Math.cos(angulo);
-            let pyRojo = 100 * Math.sin(angulo);
-            let pxAzul = 100 * Math.cos(angulo + Math.PI);
-            let pyAzul = 100 * Math.sin(angulo + Math.PI);
-
-            // Comprobar colisiones con todos los obstáculos
-            let colision = false;
-            for (let obs of obstaculos) {
-                let obsAjustado = { x: obs.x - 200, y: obs.y - 300, w: obs.w, h: obs.h };
-                if (verificarColision(pxRojo, pyRojo, obsAjustado) || 
-    verificarColision(pxAzul, pyAzul, obsAjustado)) {
-    estado = 'gameover'; // Cambiamos el estado al chocar
-    colision = true; // <--- AGREGA ESTO AQUÍ
-}
-            }
-
-            // Dibujar puntos (amarillo si hay colisión, normal si no)
-            ctx.fillStyle = colision ? 'yellow' : 'red';
-            ctx.beginPath(); ctx.arc(100, 0, 10, 0, Math.PI * 2); ctx.fill();
-            
-            ctx.fillStyle = colision ? 'yellow' : 'blue';
-            ctx.beginPath(); ctx.arc(-100, 0, 10, 0, Math.PI * 2); ctx.fill();
-            ctx.restore();
-            // --- AQUÍ TERMINA ---
-            // --- MOVIMIENTO ---
-            // Ahora solo se mueve si 'girando' es true
-            if (girando) {
-                angulo += (velocidadGiro * direccion);
-            }
-
             requestAnimationFrame(dibujar);
-            
         }
-// 3. EVENTOS
-// 1. REINICIO (Detectar clic)
-window.addEventListener('mousedown', (e) => {
-    if (estado === 'gameover') {
-        estado = 'jugando';
-        obstaculos = [];
-        velocidad = 2;
-        angulo = 0;
-        tiempoInicio = Date.now();
-        girando = false; // Aseguramos que no empiece girando
-    } else {
-        girando = true;
-        // Calculamos dirección basada en el clic
-        let rect = canvas.getBoundingClientRect();
-        let clicX = e.clientX - rect.left;
-        direccion = (clicX < canvas.width / 2) ? -1 : 1;
-    }
-});
 
-// 2. DETENER GIRO (Al soltar o si el mouse sale del canvas)
-const detenerGiro = () => { girando = false; };
-window.addEventListener('mouseup', detenerGiro);
-window.addEventListener('mouseout', detenerGiro); // Por si sale del canvas
-        // 4. ARRANQUE
-        tiempoInicio = Date.now();
+        window.addEventListener('mousedown', (e) => {
+            if (estado === 'gameover') {
+                estado = 'jugando';
+                obstaculos = [];
+                velocidad = 2;
+                angulo = 0;
+                tiempoInicio = Date.now();
+                girando = false;
+            } else {
+                girando = true;
+                let rect = canvas.getBoundingClientRect();
+                let clicX = e.clientX - rect.left;
+                direccion = (clicX < canvas.width / 2) ? -1 : 1;
+            }
+        });
+
+        window.addEventListener('mouseup', () => girando = false);
+        window.addEventListener('mouseout', () => girando = false);
+
         dibujar();
     </script>
 </body>
