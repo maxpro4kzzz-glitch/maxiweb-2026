@@ -27,6 +27,11 @@
         // 2. LÓGICA
        function actualizarObstaculos() {
             velocidad += aceleracion;
+
+            // Nueva condición: Solo creamos uno nuevo si no hay obstáculos 
+            // o si el último que creamos ya bajó al menos 200 píxeles
+            let ultimoObstaculo = obstaculos[obstaculos.length - 1];
+            let puedeCrear = obstaculos.length === 0 || (ultimoObstaculo && ultimoObstaculo.y > 200);
             
             // Generar obstáculo cada cierto tiempo
             if (Math.random() < 0.02) {
