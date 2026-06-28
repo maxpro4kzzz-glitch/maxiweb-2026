@@ -119,22 +119,37 @@
         }
         ctx.globalAlpha = 1.0;
 
+        
+// ... (todo el código anterior hasta el bucle for de colisión)
+
         // DIBUJAR PUNTOS PRINCIPALES
         let colision = false;
-        // ... (Tu lógica de colisión se mantiene igual)
-        // [IMPORTANTE: Asegúrate de calcular colision antes de dibujar]
-        
+        for (let obs of obstaculos) {
+            let obsAjustado = { x: obs.x - 200, y: obs.y - 300, w: obs.w, h: obs.h };
+            if (verificarColision(pxRojo, pyRojo, obsAjustado) || verificarColision(pxAzul, pyAzul, obsAjustado)) {
+                estado = 'gameover';
+                colision = true;
+                
+                // Guardar récord
+                let tiempoFinal = (Date.now() - tiempoInicio) / 1000;
+                if (tiempoFinal > mejorTiempo) {
+                    mejorTiempo = tiempoFinal;
+                    localStorage.setItem('maxiwebRecord', mejorTiempo);
+                }
+            }  
+        } // <--- Cierra el for de colisiones AQUÍ
+
+        // Ahora dibujamos los círculos FUERA del bucle for
         ctx.fillStyle = colision ? 'yellow' : 'red';
         ctx.beginPath(); ctx.arc(pxRojo, pyRojo, 15, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = colision ? 'yellow' : 'blue';
         ctx.beginPath(); ctx.arc(pxAzul, pyAzul, 15, 0, Math.PI * 2); ctx.fill();
-        ctx.restore();
+        ctx.restore(); // <--- Restauramos el contexto después de dibujar
 
         if (girando) { angulo += (velocidadGiro * direccion); }
-    }
+    } // <--- Cierra el else
     requestAnimationFrame(dibujar);
 }
-
         window.addEventListener('mousedown', (e) => {
             if (estado === 'gameover') {
                 estado = 'jugando';
