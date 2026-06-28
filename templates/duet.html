@@ -85,6 +85,7 @@ function verificarColision(puntoX, puntoY, obs) {
                 if (verificarColision(pxRojo, pyRojo, obsAjustado) || 
     verificarColision(pxAzul, pyAzul, obsAjustado)) {
     estado = 'gameover'; // Cambiamos el estado al chocar
+    colision = true; // <--- AGREGA ESTO AQUÍ
 }
             }
 
@@ -100,23 +101,33 @@ function verificarColision(puntoX, puntoY, obs) {
             angulo += rotacion;
             requestAnimationFrame(dibujar);
         }
+// 3. EVENTOS
+        window.addEventListener('mousedown', (e) => {
+            if (estado === 'gameover') {
+                // Lógica de reinicio
+                estado = 'jugando';
+                obstaculos = [];
+                velocidad = 2;
+                angulo = 0;
+                dibujar(); 
+            } else {
+                // Lógica de juego: cambiar dirección
+                rotacion *= -1;
+            }
+        });
 
-        // 3. EVENTOS
-        window.addEventListener('mousedown', () => rotacion *= -1);
-        window.addEventListener('touchstart', () => rotacion *= -1);
-        window.addEventListener('mousedown', () => {
-    if (estado === 'gameover') {
-        // Lógica de reinicio
-        estado = 'jugando';
-        obstaculos = [];
-        velocidad = 2;
-        angulo = 0;
-        dibujar(); 
-    } else {
-        // Lógica de juego: cambiar dirección
-        rotacion *= -1;
-    }
-});
+        // Hacemos lo mismo para el tacto en móviles
+        window.addEventListener('touchstart', (e) => {
+            if (estado === 'gameover') {
+                estado = 'jugando';
+                obstaculos = [];
+                velocidad = 2;
+                angulo = 0;
+                dibujar(); 
+            } else {
+                rotacion *= -1;
+            }
+        });
 
         // 4. ARRANQUE
         dibujar();
