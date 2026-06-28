@@ -4,7 +4,6 @@ from flask_login import LoginManager, UserMixin, login_user, current_user, login
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
 from pytz import timezone
-import random
 import os
 from functools import wraps
 
@@ -353,49 +352,6 @@ def recuperar_password():
                 
     return render_template('recuperar_password.html')
 
-@app.route('/juego', methods=['GET', 'POST'])
-@login_requerido  # <--- Agrega esto también
-def juego():
-    limites = {'facil': 5, 'normal': 10, 'dificil': 15}
-    if 'numero_secreto' not in session:
-        session['dificultad'] = 'facil'
-        session['rango'] = 10
-        session['numero_secreto'] = random.randint(1, 10)
-        session['intentos'] = 0
-    
-    limite_actual = limites.get(session.get('dificultad', 'facil'), 5)
-    
-    if request.method == 'POST':
-        if 'dificultad' in request.form:
-            dificultad = request.form.get('dificultad')
-            session['dificultad'] = dificultad
-            rango = {'facil': 10, 'normal': 20, 'dificil': 50}.get(dificultad, 10)
-            session['rango'] = rango
-            session['numero_secreto'] = random.randint(1, rango)
-            session['intentos'] = 0
-            flash(f"Dificultad cambiada a {dificultad}.")
-        elif 'intento' in request.form:
-            intentos_str = request.form.get('intento')
-            if intentos_str and intentos_str.isdigit():
-                session['intentos'] += 1
-                intento = int(intentos_str)
-                secret = session.get('numero_secreto')
-                if intento == secret:
-                    flash(f"¡GANASTE! Era el {secret}")
-                    session['intentos'] = 0
-                    session['numero_secreto'] = random.randint(1, session.get('rango', 10))
-                elif session['intentos'] >= limite_actual:
-                    flash(f"¡Perdiste! El número era {secret}")
-                    session['intentos'] = 0
-                    session['numero_secreto'] = random.randint(1, session.get('rango', 10))
-                else:
-                    pista = "¡Es más alto!" if intento < secret else "¡Es más bajo!"
-                    flash(f"{pista} (Intento {session['intentos']}/{limite_actual})")
-    
-    return render_template("juego.html", 
-                           rango=session.get('rango', 10), 
-                           intentos=session.get('intentos', 0), 
-                           limite=limite_actual)
 @app.route('/visitantes')
 def ver_visitantes():
     # Esto busca en tu lista 'visitantes' y la muestra
