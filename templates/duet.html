@@ -106,13 +106,14 @@ function verificarColision(puntoX, puntoY, obs) {
         window.addEventListener('touchstart', () => rotacion *= -1);
         window.addEventListener('mousedown', () => {
     if (estado === 'gameover') {
-        // Resetear variables
+        // Lógica de reinicio
         estado = 'jugando';
         obstaculos = [];
         velocidad = 2;
         angulo = 0;
-        dibujar(); // Volver a empezar
+        dibujar(); 
     } else {
+        // Lógica de juego: cambiar dirección
         rotacion *= -1;
     }
 });
