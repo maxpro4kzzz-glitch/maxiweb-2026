@@ -74,8 +74,9 @@
     <hr>
     <h4>Mensajes:</h4>
     {% for msg in mensajes %}
-   <div class="mensaje-contenedor {{ 'mio' if current_user.username in msg.username else 'otro' }}" 
-     oncontextmenu="mostrarMenu(event, '{{ msg.id }}')"{% endif %}>
+    <div class="mensaje-contenedor {{ 'mio' if current_user.username in msg.username else 'otro' }}" 
+         {% if current_user.username in msg.username %}oncontextmenu="mostrarMenu(event, '{{ msg.id }}')"{% endif %}>
+        
         <div class="mensaje-burbuja">
             <strong>{{ msg.username }}</strong><br>
             {{ msg.content }}
@@ -85,7 +86,7 @@
             </small>
         </div>
     </div>
-    {% endfor %}
+{% endfor %}
     </div>
 
 {% if session.get('es_owner') %}
