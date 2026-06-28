@@ -42,7 +42,13 @@
                 obstaculos.shift();
             }
         }
-
+function verificarColision(puntoX, puntoY, obs) {
+    // Esto verifica si el punto está dentro del rectángulo del obstáculo
+    return puntoX > obs.x && 
+           puntoX < obs.x + obs.w && 
+           puntoY > obs.y && 
+           puntoY < obs.y + obs.h;
+}
         function dibujar() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
@@ -57,7 +63,32 @@
             ctx.save();
             ctx.translate(200, 300);
             ctx.rotate(angulo);
-            
+            // ... dentro de ctx.save() y translate(200, 300) ...
+
+// Calcular posiciones reales de los puntos
+let pxRojo = 100 * Math.cos(angulo);
+let pyRojo = 100 * Math.sin(angulo);
+let pxAzul = 100 * Math.cos(angulo + Math.PI); // El azul está opuesto
+let pyAzul = 100 * Math.sin(angulo + Math.PI);
+
+// Comprobar colisiones con todos los obstáculos
+let colision = false;
+for (let obs of obstaculos) {
+    // Ajustamos la coordenada del obstáculo al sistema del centro (200, 300)
+    let obsAjustado = { x: obs.x - 200, y: obs.y - 300, w: obs.w, h: obs.h };
+    
+    if (verificarColision(pxRojo, pyRojo, obsAjustado) || 
+        verificarColision(pxAzul, pyAzul, obsAjustado)) {
+        colision = true;
+    }
+}
+
+// Dibujar puntos (rojo si hay colisión, normal si no)
+ctx.fillStyle = colision ? 'yellow' : 'red';
+ctx.beginPath(); ctx.arc(pxRojo, pyRojo, 10, 0, Math.PI * 2); ctx.fill();
+
+ctx.fillStyle = colision ? 'yellow' : 'blue';
+ctx.beginPath(); ctx.arc(pxAzul, pyAzul, 10, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = 'red';
             ctx.beginPath(); ctx.arc(100, 0, 10, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = 'blue';
