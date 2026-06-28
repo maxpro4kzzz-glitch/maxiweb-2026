@@ -48,22 +48,21 @@
         }
 
      function verificarColision(puntoX, puntoY, obs) {
-         // 1. Encontrar el punto dentro del rectángulo más cercano al centro del círculo
-         let closestX = Math.max(obs.x, Math.min(puntoX, obs.x + obs.w));
-         let closestY = Math.max(obs.y, Math.min(puntoY, obs.y + obs.h));
-
-         // 2. Calcular la distancia entre el centro del círculo y ese punto
-         let distanceX = puntoX - closestX;
-         let distanceY = puntoY - closestY;
-         let distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
-
-         // 3. Comprobar si la distancia es menor que el radio de colisión
-         // Si tu círculo mide 15px, usaremos 10px como radio de colisión (margen de 5px)
-         // Esto hará que el borde del círculo sea "suave" y no explote al rozar.
-         let radioColision = 10;
-         return distanceSquared < (radioColision * radioColision);
-     }
-
+         // Definimos el área del obstáculo
+         let obsCentroX = obs.x + (obs.w / 2);
+         let obsCentroY = obs.y + (obs.h / 2);
+    
+         // Calculamos distancia al centro del obstáculo
+         let dx = puntoX - obsCentroX;
+         let dy = puntoY - obsCentroY;
+    
+         // Usamos el teorema de Pitágoras para la distancia total
+         let distancia = Math.sqrt(dx * dx + dy * dy);
+    
+         // El radio de colisión: 10px (ajusta este número si quieres más o menos margen)
+         // Si giras rápido, el margen se mantiene seguro
+         return distancia < 10; 
+    }
         function formatearTiempo(segundosTotales) {
             let mins = Math.floor(segundosTotales / 60);
             let segs = Math.floor(segundosTotales % 60);
