@@ -47,15 +47,21 @@
             }
         }
 
-      function verificarColision(puntoX, puntoY, obs) {
-          // Reducimos el área de detección un poco (por ejemplo, 5 píxeles) 
-          // para que el jugador sienta que es más "permisivo"
-          let margen = 5; 
-          return puntoX > (obs.x + margen) && 
-                 puntoX < (obs.x + obs.w - margen) && 
-                 puntoY > (obs.y + margen) && 
-                 puntoY < (obs.y + obs.h - margen);
+     function verificarColision(puntoX, puntoY, obs) {
+         // Calculamos el punto más cercano del obstáculo al centro del círculo
+         let cercanoX = Math.max(obs.x, Math.min(puntoX, obs.x + obs.w));
+         let cercanoY = Math.max(obs.y, Math.min(puntoY, obs.y + obs.h));
+
+         // Calculamos la distancia entre ese punto y el centro del círculo
+         let distanciaX = puntoX - cercanoX;
+         let distanciaY = puntoY - cercanoY;
+         let distanciaCuadrada = (distanciaX * distanciaX) + (distanciaY * distanciaY);
+
+         // Si la distancia es menor al radio al cuadrado (12*12 = 144), hay choque
+         // Usamos 10 al cuadrado (100) para darle un margen de tolerancia extra
+         return distanciaCuadrada < (10 * 10);
      }
+     
         function formatearTiempo(segundosTotales) {
             let mins = Math.floor(segundosTotales / 60);
             let segs = Math.floor(segundosTotales % 60);
