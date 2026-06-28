@@ -68,14 +68,14 @@ class Message(db.Model):
     username = db.Column(db.String(80), nullable=False) # <--- Cambiamos 'author' por 'username'
     content = db.Column(db.String(500), nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
-    es_editado = db.Column(db.Boolean, default=False)
+    editado = db.Column(db.Boolean, default=False)
 
 from sqlalchemy import text
 
 # ... (todo tu código anterior)
 
 with app.app_context():
-#    db.drop_all()
+    db.drop_all()
     # BORRAMOS LA TABLA VIEJA PARA QUE SE CREE LA NUEVA CON TODAS LAS COLUMNAS
     db.create_all()
     print("Base de datos recreada con todos los campos.")
@@ -139,7 +139,7 @@ def enviar_mensaje():
     
     # Gestión de la hora
     arg_tz = timezone('America/Argentina/Buenos_Aires')
-    hora_arg = datetime.now(arg_tz)
+    hora_arg = datetime.now(arg_tz).replace(tzinfo=None)
     
     # Guardamos en la base de datos
     nuevo_mensaje = Message(username=nombre_para_mostrar, content=contenido, timestamp=hora_arg)
@@ -171,7 +171,7 @@ def editar_mensaje(id):
     if request.method == 'POST':
         nuevo_contenido = request.form['contenido']
         mensaje.content = nuevo_contenido
-        mensaje.es_editado = True # Marcamos que fue editado
+        mensaje.editado = True # Marcamos que fue editado
         db.session.commit()
         return redirect(url_for('index'))
     

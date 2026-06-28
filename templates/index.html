@@ -82,13 +82,18 @@
          {% if current_user.username in msg.username %}oncontextmenu="mostrarMenu(event, '{{ msg.id }}')"{% endif %}>
         
         <div class="mensaje-burbuja">
-            <strong>{{ msg.username }}</strong><br>
-            {{ msg.content }}
-            <br>
-            <small style="color: #666; font-size: 0.75em;">
-                {{ msg.timestamp.strftime('%d/%m/%Y %I:%M %p') }}
-            </small>
-        </div>
+    <strong>{{ msg.username }}</strong><br>
+    {{ msg.content }}
+    
+    {% if msg.editado %}
+        <span style="color: gray; font-size: 0.8em;">(Editado)</span>
+    {% endif %}
+    
+    <br>
+    <small style="color: #666; font-size: 0.75em;">
+        {{ msg.timestamp.strftime('%d/%m/%Y %I:%M %p') }}
+    </small>
+</div>
     </div>
 {% endfor %}
     </div>
