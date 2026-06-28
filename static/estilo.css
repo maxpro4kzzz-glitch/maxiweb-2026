@@ -142,3 +142,21 @@ body.dark-mode select {
     display: block;
     color: black;
 }
+/* Ajustes para que se vea bien en todos lados */
+body {
+    font-size: 16px; /* Tamaño base estándar para lectura cómoda */
+    line-height: 1.6; /* Más espacio entre líneas de texto */
+    padding: 10px;
+}
+
+.mensaje-burbuja {
+    padding: 15px; /* Más espacio dentro de la burbuja */
+    font-size: 18px; /* Texto de mensajes más grande */
+    margin-bottom: 10px;
+}
+
+button, a {
+    padding: 12px 20px; /* Botones más altos y anchos */
+    font-size: 16px; /* Botones fáciles de tocar */
+    display: inline-block;
+}
