@@ -74,7 +74,8 @@
     <hr>
     <h4>Mensajes:</h4>
     {% for msg in mensajes %}
-    <div class="mensaje-contenedor {{ 'mio' if current_user.username in msg.username else 'otro' }}">
+   <div class="mensaje-contenedor {{ 'mio' if current_user.username in msg.username else 'otro' }}" 
+     oncontextmenu="mostrarMenu(event, '{{ msg.id }}')"{% endif %}>
         <div class="mensaje-burbuja">
             <strong>{{ msg.username }}</strong><br>
             {{ msg.content }}
@@ -131,6 +132,24 @@
     function cerrarMenu() {
         document.getElementById("mi-menu").style.width = "0";
     }
+    // Función para mostrar el menú al presionar
+function mostrarMenu(e, id) {
+    e.preventDefault(); // Evita el menú del navegador
+    const menu = document.getElementById('menu-flotante');
+    menu.style.top = e.clientY + 'px';
+    menu.style.left = e.clientX + 'px';
+    menu.style.display = 'block';
+
+    // Configuramos el enlace de borrar con el ID
+    const linkBorrar = document.getElementById('link-borrar');
+    linkBorrar.href = `/borrar-mensaje/${id}`;
+}
+
+// Cierra el menú al hacer clic en cualquier lugar
+window.onclick = () => document.getElementById('menu-flotante').style.display = 'none';
 </script>
+<div id="menu-flotante" class="menu-flotante" style="display:none; position:fixed; background:white; border:1px solid #ccc; padding:10px; border-radius:8px; z-index:1000; box-shadow: 2px 2px 10px rgba(0,0,0,0.2);">
+    <a href="#" id="link-borrar" style="color: red; text-decoration: none; font-weight: bold;">Borrar mensaje</a>
+</div>
 </body>
 </html>

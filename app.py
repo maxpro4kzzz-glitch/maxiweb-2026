@@ -149,6 +149,15 @@ def enviar_mensaje():
     
     return redirect(url_for('index'))
 
+@app.route('/borrar-mensaje/<int:id>')
+@login_requerido
+def borrar_mensaje(id):
+    mensaje = Message.query.get_or_404(id)
+    if current_user.username in mensaje.username:
+        db.session.delete(mensaje)
+        db.session.commit()
+    return redirect(url_for('index'))
+
 @app.route('/debug-usuario')
 @login_required
 def debug():
