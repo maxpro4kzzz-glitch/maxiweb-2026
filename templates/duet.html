@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Maxiweb - Duet</title>
+    <style>
+        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        canvas { border: 2px solid #333; background: #111; }
+    </style>
+</head>
+<body>
+    <canvas id="juegoCanvas" width="400" height="600"></canvas>
+
+    <script>
+        const canvas = document.getElementById('juegoCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Aquí dibujaremos nuestro círculo central
+        function dibujar() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Dibujar círculo central
+            ctx.beginPath();
+            ctx.arc(200, 300, 100, 0, Math.PI * 2);
+            ctx.strokeStyle = '#555';
+            ctx.stroke();
+            
+            requestAnimationFrame(dibujar);
+        }
+        dibujar();
+    </script>
+</body>
+</html>

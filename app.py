@@ -352,6 +352,11 @@ def recuperar_password():
                 
     return render_template('recuperar_password.html')
 
+@app.route('/duet')
+@login_requerido
+def duet():
+    return render_template("duet.html")
+    
 @app.route('/visitantes')
 def ver_visitantes():
     # Esto busca en tu lista 'visitantes' y la muestra
