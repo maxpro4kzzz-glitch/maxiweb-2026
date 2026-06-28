@@ -48,7 +48,17 @@
             return puntoX > obs.x && puntoX < obs.x + obs.w && 
                    puntoY > obs.y && puntoY < obs.y + obs.h;
         }
-
+        function formatearTiempo(segundosTotales) {
+            let mins = Math.floor(segundosTotales / 60);
+            let segs = Math.floor(segundosTotales % 60);
+            // Esto hace que si son 5 segundos, se vea "05" en lugar de "5"
+            let segsFormateado = segs < 10 ? "0" + segs : segs;
+            
+            if (mins > 0) {
+                return mins + ":" + segsFormateado;
+            }
+            return segsFormateado + "s";
+        }
         function dibujar() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -59,10 +69,12 @@
                 ctx.fillText('Toca para reiniciar', 80, 350);
             } else {
                 // Dibujar el tiempo
-                let tiempoActual = ((Date.now() - tiempoInicio) / 1000).toFixed(1);
+                let segundosTranscurridos = (Date.now() - tiempoInicio) / 1000;
+                let tiempoTexto = formatearTiempo(segundosTranscurridos);
+                ctx.fillText('Tiempo: ' + tiempoTexto, 20, 30);
                 ctx.fillStyle = 'white';
                 ctx.font = '20px Arial';
-                ctx.fillText('Tiempo: ' + tiempoActual + 's', 20, 30);
+                
                 
                 actualizarObstaculos();
                 ctx.fillStyle = 'white';
