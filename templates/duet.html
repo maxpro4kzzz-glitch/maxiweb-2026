@@ -25,15 +25,18 @@
         let obstaculos = [];
 
         // 2. LÓGICA
-        function actualizarObstaculos() {
+       function actualizarObstaculos() {
             velocidad += aceleracion;
             
             // Generar obstáculo cada cierto tiempo
             if (Math.random() < 0.02) {
-    // x: 50 a 350 es el ancho del canvas. 
-    // Usamos un ancho menor (150) para dejar espacio a los costados
-    obstaculos.push({ x: 125, y: -50, w: 150, h: 20 });
-}
+                // AQUÍ ESTÁ EL CAMBIO:
+                // Generamos un número aleatorio entre 50 y 250
+                // Así los bloques aparecen en distintas posiciones horizontales
+                let posicionX = Math.floor(Math.random() * 200) + 50; 
+                
+                obstaculos.push({ x: posicionX, y: -50, w: 100, h: 20 });
+            }
 
             for (let i = 0; i < obstaculos.length; i++) {
                 obstaculos[i].y += velocidad;
