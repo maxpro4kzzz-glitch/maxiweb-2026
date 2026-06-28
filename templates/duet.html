@@ -12,47 +12,66 @@
     <canvas id="juegoCanvas" width="400" height="600"></canvas>
 
     <script>
-    const canvas = document.getElementById('juegoCanvas');
-    const ctx = canvas.getContext('2d');
-    
-    let angulo = 0; // Esta es nuestra variable clave
-    let rotacion = 0.05; // Velocidad de rotación
+        // 1. DECLARACIÓN
+        const canvas = document.getElementById('juegoCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let angulo = 0;
+        let rotacion = 0.05;
+        let velocidad = 2;
+        const aceleracion = 0.0005; // Un poco más suave para que dure más
+        let obstaculos = [];
 
-    function dibujar() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        ctx.save(); // Guardamos el estado original
-        ctx.translate(200, 300); // Movemos el origen al centro
-        ctx.rotate(angulo); // Rotamos el lienzo
-        
-        // Dibujar círculo guía
-        ctx.beginPath();
-        ctx.arc(0, 0, 100, 0, Math.PI * 2);
-        ctx.strokeStyle = '#555';
-        ctx.stroke();
+        // 2. LÓGICA
+        function actualizarObstaculos() {
+            velocidad += aceleracion;
+            
+            // Generar obstáculo cada cierto tiempo
+            if (Math.random() < 0.02) {
+                obstaculos.push({ x: 100, y: -50, w: 200, h: 20 });
+            }
 
-        // Dibujar los dos puntos (los que orbitan)
-        ctx.fillStyle = 'red';
-        ctx.beginPath();
-        ctx.arc(100, 0, 10, 0, Math.PI * 2); // Punto rojo
-        ctx.fill();
-        
-        ctx.fillStyle = 'blue';
-        ctx.beginPath();
-        ctx.arc(-100, 0, 10, 0, Math.PI * 2); // Punto azul (opuesto)
-        ctx.fill();
-        
-        ctx.restore(); // Restauramos el estado
-        
-        angulo += rotacion; // Incrementamos el ángulo
-        requestAnimationFrame(dibujar);
-    }
+            for (let i = 0; i < obstaculos.length; i++) {
+                obstaculos[i].y += velocidad;
+            }
 
-    // Cambiar dirección al tocar
-    window.addEventListener('mousedown', () => rotacion *= -1);
-    window.addEventListener('touchstart', () => rotacion *= -1);
+            // Limpieza: borrar obstáculos fuera de pantalla
+            if (obstaculos.length > 0 && obstaculos[0].y > canvas.height) {
+                obstaculos.shift();
+            }
+        }
 
-    dibujar();
-</script>
+        function dibujar() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Dibujar obstáculos
+            actualizarObstaculos();
+            ctx.fillStyle = 'white';
+            for (let obs of obstaculos) {
+                ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
+            }
+
+            // Dibujar jugador
+            ctx.save();
+            ctx.translate(200, 300);
+            ctx.rotate(angulo);
+            
+            ctx.fillStyle = 'red';
+            ctx.beginPath(); ctx.arc(100, 0, 10, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = 'blue';
+            ctx.beginPath(); ctx.arc(-100, 0, 10, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+            
+            angulo += rotacion;
+            requestAnimationFrame(dibujar);
+        }
+
+        // 3. EVENTOS
+        window.addEventListener('mousedown', () => rotacion *= -1);
+        window.addEventListener('touchstart', () => rotacion *= -1);
+
+        // 4. ARRANQUE
+        dibujar();
+    </script>
 </body>
 </html>
