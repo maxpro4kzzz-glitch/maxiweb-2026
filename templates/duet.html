@@ -12,6 +12,7 @@
     <canvas id="juegoCanvas" width="400" height="600"></canvas>
 
  <script>
+        let mejorTiempo = localStorage.getItem('maxiwebRecord') || 0;
         let estado = 'jugando';
         let girando = false;
         let velocidadGiro = 0.06;
@@ -67,7 +68,13 @@
                 ctx.font = '30px Arial';
                 ctx.fillText('GAME OVER', 120, 300);
                 ctx.fillText('Toca para reiniciar', 80, 350);
-            } else {
+
+                // Aquí agregamos el récord:
+                ctx.font = '20px Arial';
+                ctx.fillText('Tu mejor tiempo: ' + formatearTiempo(mejorTiempo), 120, 400);
+                return; 
+            }
+             {
                 // Dibujar el tiempo
                 let segundosTranscurridos = (Date.now() - tiempoInicio) / 1000;
                 let tiempoTexto = formatearTiempo(segundosTranscurridos);
@@ -94,12 +101,22 @@
                 let colision = false;
                 for (let obs of obstaculos) {
                     let obsAjustado = { x: obs.x - 200, y: obs.y - 300, w: obs.w, h: obs.h };
-                    if (verificarColision(pxRojo, pyRojo, obsAjustado) || 
-                        verificarColision(pxAzul, pyAzul, obsAjustado)) {
-                        estado = 'gameover';
-                        colision = true;
+                   
+                if (verificarColision(pxRojo, pyRojo, obsAjustado) || verificarColision(pxAzul, pyAzul, obsAjustado)) {
+                    estado = 'gameover';
+                    colision = true;
+    
+                    // Guardar récord si es mayor al actual
+                    let tiempoFinal = (Date.now() - tiempoInicio) / 1000;
+                    if (tiempoFinal > mejorTiempo) {
+                        mejorTiempo = tiempoFinal;
+                        localStorage.setItem('maxiwebRecord', mejorTiempo);
                     }
-                }
+                }  
+            }               
+                       
+                   
+              
 
                 ctx.fillStyle = colision ? 'yellow' : 'red';
                 ctx.beginPath(); ctx.arc(100, 0, 10, 0, Math.PI * 2); ctx.fill();
