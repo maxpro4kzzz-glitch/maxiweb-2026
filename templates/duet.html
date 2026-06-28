@@ -63,29 +63,26 @@
             return segsFormateado + "s";
         }
      function dibujar() {
-       ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (estado === 'inicio') {
+    if (estado === 'inicio') {
         ctx.fillStyle = 'white';
         ctx.font = '40px Arial';
         ctx.textAlign = "center";
         ctx.fillText('MAXIWEB DUET', canvas.width / 2, 250);
-        
         ctx.font = '20px Arial';
         ctx.fillText('Toca para comenzar', canvas.width / 2, 350);
-        ctx.textAlign = "left"; // Restauramos alineación
-        
-        } else if (estado === 'gameover') 
-        // ... tu código actual de gameover ...
+        ctx.textAlign = "left";
 
-    if (estado === 'gameover') {
+    } else if (estado === 'gameover') {
         ctx.fillStyle = 'white';
         ctx.font = '30px Arial';
         ctx.fillText('GAME OVER', 120, 300);
         ctx.fillText('Toca para reiniciar', 80, 350);
         ctx.font = '20px Arial';
         ctx.fillText('Tu mejor tiempo: ' + formatearTiempo(mejorTiempo), 120, 400);
-    } else {
+
+    } else if (estado === 'jugando') {
         // --- HUD Y LÓGICA ---
         let segundosTranscurridos = (Date.now() - tiempoInicio) / 1000;
         let tiempoTexto = formatearTiempo(segundosTranscurridos);
@@ -116,8 +113,8 @@
         estelaRojo.push({ x: pxRojo, y: pyRojo });
         estelaAzul.push({ x: pxAzul, y: pyAzul });
 
-        if (estelaRojo.length > 10) { estelaRojo.shift(); }
-        if (estelaAzul.length > 10) { estelaAzul.shift(); }
+        if (estelaRojo.length > 10) estelaRojo.shift();
+        if (estelaAzul.length > 10) estelaAzul.shift();
 
         // DIBUJAR ESTELA
         for (let i = 0; i < estelaRojo.length; i++) {
@@ -132,35 +129,29 @@
         }
         ctx.globalAlpha = 1.0;
 
-        
-// ... (todo el código anterior hasta el bucle for de colisión)
-
-        // DIBUJAR PUNTOS PRINCIPALES
+        // DIBUJAR PUNTOS Y COLISIÓN
         let colision = false;
         for (let obs of obstaculos) {
             let obsAjustado = { x: obs.x - 200, y: obs.y - 300, w: obs.w, h: obs.h };
             if (verificarColision(pxRojo, pyRojo, obsAjustado) || verificarColision(pxAzul, pyAzul, obsAjustado)) {
                 estado = 'gameover';
                 colision = true;
-                
-                // Guardar récord
                 let tiempoFinal = (Date.now() - tiempoInicio) / 1000;
                 if (tiempoFinal > mejorTiempo) {
                     mejorTiempo = tiempoFinal;
                     localStorage.setItem('maxiwebRecord', mejorTiempo);
                 }
             }  
-        } // <--- Cierra el for de colisiones AQUÍ
+        }
 
-        // Ahora dibujamos los círculos FUERA del bucle for
         ctx.fillStyle = colision ? 'yellow' : 'red';
         ctx.beginPath(); ctx.arc(pxRojo, pyRojo, 15, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = colision ? 'yellow' : 'blue';
         ctx.beginPath(); ctx.arc(pxAzul, pyAzul, 15, 0, Math.PI * 2); ctx.fill();
-        ctx.restore(); // <--- Restauramos el contexto después de dibujar
+        ctx.restore();
 
-        if (girando) { angulo += (velocidadGiro * direccion); }
-    } // <--- Cierra el else
+        if (girando) angulo += (velocidadGiro * direccion);
+    }
     requestAnimationFrame(dibujar);
 }
         window.addEventListener('mousedown', (e) => {
