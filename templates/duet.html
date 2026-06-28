@@ -14,6 +14,7 @@
     <script>
         let estado = 'jugando'; // Nuevo estado
         // 1. DECLARACIÓN
+        let tiempoInicio = 0;
         const canvas = document.getElementById('juegoCanvas');
         const ctx = canvas.getContext('2d');
         
@@ -59,6 +60,12 @@ function verificarColision(puntoX, puntoY, obs) {
         return; 
     }
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Dibujar el tiempo
+            let tiempoActual = ((Date.now() - tiempoInicio) / 1000).toFixed(1);
+            ctx.fillStyle = 'white';
+            ctx.font = '20px Arial';
+            ctx.fillText('Tiempo: ' + tiempoActual + 's', 20, 30);
             
             // Dibujar obstáculos
             actualizarObstaculos();
@@ -104,6 +111,7 @@ function verificarColision(puntoX, puntoY, obs) {
 // 3. EVENTOS
         window.addEventListener('mousedown', (e) => {
             if (estado === 'gameover') {
+                tiempoInicio = Date.now(); // <-- Esto reinicia el contador a 0
                 // Lógica de reinicio
                 estado = 'jugando';
                 obstaculos = [];
@@ -130,6 +138,7 @@ function verificarColision(puntoX, puntoY, obs) {
         });
 
         // 4. ARRANQUE
+        tiempoInicio = Date.now();
         dibujar();
     </script>
 </body>
