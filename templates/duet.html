@@ -83,6 +83,12 @@
         ctx.font = '20px Arial';
         ctx.fillText('Tiempo: ' + tiempoTexto, 20, 30);
         
+        // Dibujar el Récord a la derecha
+        let recordTexto = formatearTiempo(mejorTiempo);
+        ctx.textAlign = "right"; // Alineamos el texto a la derecha
+        ctx.fillText('Récord: ' + recordTexto, 380, 30);
+        ctx.textAlign = "left"; // Volvemos a dejar la alineación normal para lo demás
+        
         actualizarObstaculos();
         ctx.fillStyle = 'white';
         for (let obs of obstaculos) {
