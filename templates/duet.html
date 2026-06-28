@@ -28,8 +28,10 @@
             
             // Generar obstáculo cada cierto tiempo
             if (Math.random() < 0.02) {
-                obstaculos.push({ x: 100, y: -50, w: 200, h: 20 });
-            }
+    // x: 50 a 350 es el ancho del canvas. 
+    // Usamos un ancho menor (150) para dejar espacio a los costados
+    obstaculos.push({ x: 125, y: -50, w: 150, h: 20 });
+}
 
             for (let i = 0; i < obstaculos.length; i++) {
                 obstaculos[i].y += velocidad;
