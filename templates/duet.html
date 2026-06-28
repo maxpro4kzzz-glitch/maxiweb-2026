@@ -14,6 +14,9 @@
     <script>
         let estado = 'jugando'; // Nuevo estado
         // 1. DECLARACIÓN
+        let girando = false;
+        let velocidadGiro = 0.15; // Velocidad de giro cuando mantienes presionado
+        let direccion = 1; // 1 para horario, -1 para anti-horario
         let tiempoInicio = 0;
         const canvas = document.getElementById('juegoCanvas');
         const ctx = canvas.getContext('2d');
@@ -117,34 +120,24 @@ function verificarColision(puntoX, puntoY, obs) {
             requestAnimationFrame(dibujar);
         }
 // 3. EVENTOS
-        window.addEventListener('mousedown', (e) => {
-            if (estado === 'gameover') {
-                tiempoInicio = Date.now(); // <-- Esto reinicia el contador a 0
-                // Lógica de reinicio
-                estado = 'jugando';
-                obstaculos = [];
-                velocidad = 2;
-                angulo = 0;
-                dibujar(); 
-            } else {
-                // Lógica de juego: cambiar dirección
-                rotacion *= -1;
-            }
-        });
+       window.addEventListener('mousedown', (e) => {
+    if (estado === 'gameover') {
+        // Reinicio
+        estado = 'jugando';
+        obstaculos = [];
+        velocidad = 2;
+        angulo = 0;
+        tiempoInicio = Date.now();
+    } else {
+        girando = true;
+        // Si haces clic en la mitad izquierda, gira anti-horario, si no, horario
+        direccion = (e.clientX < canvas.width / 2) ? -1 : 1;
+    }
+});
 
-        // Hacemos lo mismo para el tacto en móviles
-        window.addEventListener('touchstart', (e) => {
-            if (estado === 'gameover') {
-                estado = 'jugando';
-                obstaculos = [];
-                velocidad = 2;
-                angulo = 0;
-                dibujar(); 
-            } else {
-                rotacion *= -1;
-            }
-        });
-
+window.addEventListener('mouseup', () => {
+    girando = false;
+});
         // 4. ARRANQUE
         tiempoInicio = Date.now();
         dibujar();
