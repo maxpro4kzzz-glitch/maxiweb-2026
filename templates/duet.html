@@ -12,22 +12,47 @@
     <canvas id="juegoCanvas" width="400" height="600"></canvas>
 
     <script>
-        const canvas = document.getElementById('juegoCanvas');
-        const ctx = canvas.getContext('2d');
+    const canvas = document.getElementById('juegoCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    let angulo = 0; // Esta es nuestra variable clave
+    let rotacion = 0.05; // Velocidad de rotación
 
-        // Aquí dibujaremos nuestro círculo central
-        function dibujar() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Dibujar círculo central
-            ctx.beginPath();
-            ctx.arc(200, 300, 100, 0, Math.PI * 2);
-            ctx.strokeStyle = '#555';
-            ctx.stroke();
-            
-            requestAnimationFrame(dibujar);
-        }
-        dibujar();
-    </script>
+    function dibujar() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.save(); // Guardamos el estado original
+        ctx.translate(200, 300); // Movemos el origen al centro
+        ctx.rotate(angulo); // Rotamos el lienzo
+        
+        // Dibujar círculo guía
+        ctx.beginPath();
+        ctx.arc(0, 0, 100, 0, Math.PI * 2);
+        ctx.strokeStyle = '#555';
+        ctx.stroke();
+
+        // Dibujar los dos puntos (los que orbitan)
+        ctx.fillStyle = 'red';
+        ctx.beginPath();
+        ctx.arc(100, 0, 10, 0, Math.PI * 2); // Punto rojo
+        ctx.fill();
+        
+        ctx.fillStyle = 'blue';
+        ctx.beginPath();
+        ctx.arc(-100, 0, 10, 0, Math.PI * 2); // Punto azul (opuesto)
+        ctx.fill();
+        
+        ctx.restore(); // Restauramos el estado
+        
+        angulo += rotacion; // Incrementamos el ángulo
+        requestAnimationFrame(dibujar);
+    }
+
+    // Cambiar dirección al tocar
+    window.addEventListener('mousedown', () => rotacion *= -1);
+    window.addEventListener('touchstart', () => rotacion *= -1);
+
+    dibujar();
+</script>
 </body>
 </html>
