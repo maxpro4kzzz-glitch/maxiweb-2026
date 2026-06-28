@@ -125,12 +125,12 @@
         for (let i = 0; i < estelaRojo.length; i++) {
             ctx.globalAlpha = i / estelaRojo.length; 
             ctx.fillStyle = 'red';
-            ctx.beginPath(); ctx.arc(estelaRojo[i].x, estelaRojo[i].y, 15, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(estelaRojo[i].x, estelaRojo[i].y, 12, 0, Math.PI * 2); ctx.fill();
         }
         for (let i = 0; i < estelaAzul.length; i++) {
             ctx.globalAlpha = i / estelaAzul.length;
             ctx.fillStyle = 'blue';
-            ctx.beginPath(); ctx.arc(estelaAzul[i].x, estelaAzul[i].y, 15, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(estelaAzul[i].x, estelaAzul[i].y, 12, 0, Math.PI * 2); ctx.fill();
         }
         ctx.globalAlpha = 1.0;
 
