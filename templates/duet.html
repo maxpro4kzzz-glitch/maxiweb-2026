@@ -60,76 +60,73 @@
             }
             return segsFormateado + "s";
         }
-        function dibujar() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+       function dibujar() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            if (estado === 'gameover') {
-                ctx.fillStyle = 'white';
-                ctx.font = '30px Arial';
-                ctx.fillText('GAME OVER', 120, 300);
-                ctx.fillText('Toca para reiniciar', 80, 350);
+    if (estado === 'gameover') {
+        ctx.fillStyle = 'white';
+        ctx.font = '30px Arial';
+        ctx.fillText('GAME OVER', 120, 300);
+        ctx.fillText('Toca para reiniciar', 80, 350);
 
-                // Aquí agregamos el récord:
-                ctx.font = '20px Arial';
-                ctx.fillText('Tu mejor tiempo: ' + formatearTiempo(mejorTiempo), 120, 400);
-                return; 
-            }
-             {
-                // Dibujar el tiempo
-                let segundosTranscurridos = (Date.now() - tiempoInicio) / 1000;
-                let tiempoTexto = formatearTiempo(segundosTranscurridos);
-                ctx.fillText('Tiempo: ' + tiempoTexto, 20, 30);
-                ctx.fillStyle = 'white';
-                ctx.font = '20px Arial';
-                
-                
-                actualizarObstaculos();
-                ctx.fillStyle = 'white';
-                for (let obs of obstaculos) {
-                    ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
-                }
-
-                ctx.save();
-                ctx.translate(200, 300);
-                ctx.rotate(angulo);
-                
-                let pxRojo = 100 * Math.cos(angulo);
-                let pyRojo = 100 * Math.sin(angulo);
-                let pxAzul = 100 * Math.cos(angulo + Math.PI);
-                let pyAzul = 100 * Math.sin(angulo + Math.PI);
-
-                let colision = false;
-                for (let obs of obstaculos) {
-                    let obsAjustado = { x: obs.x - 200, y: obs.y - 300, w: obs.w, h: obs.h };
-                   
-                if (verificarColision(pxRojo, pyRojo, obsAjustado) || verificarColision(pxAzul, pyAzul, obsAjustado)) {
-                    estado = 'gameover';
-                    colision = true;
-    
-                    // Guardar récord si es mayor al actual
-                    let tiempoFinal = (Date.now() - tiempoInicio) / 1000;
-                    if (tiempoFinal > mejorTiempo) {
-                        mejorTiempo = tiempoFinal;
-                        localStorage.setItem('maxiwebRecord', mejorTiempo);
-                    }
-                }  
-            }               
-                       
-                   
-              
-
-                ctx.fillStyle = colision ? 'yellow' : 'red';
-                ctx.beginPath(); ctx.arc(100, 0, 10, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = colision ? 'yellow' : 'blue';
-                ctx.beginPath(); ctx.arc(-100, 0, 10, 0, Math.PI * 2); ctx.fill();
-                ctx.restore();
-
-                if (girando) {
-                    angulo += (velocidadGiro * direccion);
-                }
-            }
-            requestAnimationFrame(dibujar);
+        // Aquí agregamos el récord:
+        ctx.font = '20px Arial';
+        ctx.fillText('Tu mejor tiempo: ' + formatearTiempo(mejorTiempo), 120, 400);
+        
+        // No ponemos return aquí para que el juego siga corriendo y detecte el clic de reinicio
+    } else {
+        // --- LÓGICA DE JUEGO (else) ---
+        // Dibujar el tiempo
+        let segundosTranscurridos = (Date.now() - tiempoInicio) / 1000;
+        let tiempoTexto = formatearTiempo(segundosTranscurridos);
+        ctx.fillStyle = 'white';
+        ctx.font = '20px Arial';
+        ctx.fillText('Tiempo: ' + tiempoTexto, 20, 30);
+        
+        actualizarObstaculos();
+        ctx.fillStyle = 'white';
+        for (let obs of obstaculos) {
+            ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
         }
+
+        ctx.save();
+        ctx.translate(200, 300);
+        ctx.rotate(angulo);
+        
+        let pxRojo = 100 * Math.cos(angulo);
+        let pyRojo = 100 * Math.sin(angulo);
+        let pxAzul = 100 * Math.cos(angulo + Math.PI);
+        let pyAzul = 100 * Math.sin(angulo + Math.PI);
+
+        let colision = false;
+        for (let obs of obstaculos) {
+            let obsAjustado = { x: obs.x - 200, y: obs.y - 300, w: obs.w, h: obs.h };
+            
+            if (verificarColision(pxRojo, pyRojo, obsAjustado) || verificarColision(pxAzul, pyAzul, obsAjustado)) {
+                estado = 'gameover';
+                colision = true;
+
+                // Guardar récord
+                let tiempoFinal = (Date.now() - tiempoInicio) / 1000;
+                if (tiempoFinal > mejorTiempo) {
+                    mejorTiempo = tiempoFinal;
+                    localStorage.setItem('maxiwebRecord', mejorTiempo);
+                }
+            }  
+        }               
+
+        ctx.fillStyle = colision ? 'yellow' : 'red';
+        ctx.beginPath(); ctx.arc(100, 0, 10, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = colision ? 'yellow' : 'blue';
+        ctx.beginPath(); ctx.arc(-100, 0, 10, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+
+        if (girando) {
+            angulo += (velocidadGiro * direccion);
+        }
+    }
+    requestAnimationFrame(dibujar);
+}
 
         window.addEventListener('mousedown', (e) => {
             if (estado === 'gameover') {
