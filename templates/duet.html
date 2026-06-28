@@ -47,10 +47,15 @@
             }
         }
 
-        function verificarColision(puntoX, puntoY, obs) {
-            return puntoX > obs.x && puntoX < obs.x + obs.w && 
-                   puntoY > obs.y && puntoY < obs.y + obs.h;
-        }
+      function verificarColision(puntoX, puntoY, obs) {
+          // Reducimos el área de detección un poco (por ejemplo, 5 píxeles) 
+          // para que el jugador sienta que es más "permisivo"
+          let margen = 5; 
+          return puntoX > (obs.x + margen) && 
+                 puntoX < (obs.x + obs.w - margen) && 
+                 puntoY > (obs.y + margen) && 
+                 puntoY < (obs.y + obs.h - margen);
+     }
         function formatearTiempo(segundosTotales) {
             let mins = Math.floor(segundosTotales / 60);
             let segs = Math.floor(segundosTotales % 60);
