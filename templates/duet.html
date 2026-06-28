@@ -115,9 +115,14 @@ function verificarColision(puntoX, puntoY, obs) {
             ctx.beginPath(); ctx.arc(-100, 0, 10, 0, Math.PI * 2); ctx.fill();
             ctx.restore();
             // --- AQUÍ TERMINA ---
-            
-            angulo += rotacion;
+            // --- MOVIMIENTO ---
+            // Ahora solo se mueve si 'girando' es true
+            if (girando) {
+                angulo += (velocidadGiro * direccion);
+            }
+
             requestAnimationFrame(dibujar);
+            
         }
 // 3. EVENTOS
       // Cuando presionas el mouse o la pantalla:
