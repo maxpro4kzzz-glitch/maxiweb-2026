@@ -164,22 +164,24 @@
     requestAnimationFrame(dibujar);
 }
         window.addEventListener('mousedown', (e) => {
-           if (estado === 'inicio' || estado === 'gameover') {
-                estado = 'jugando';
-                obstaculos = [];
-                velocidad = 2;
-                angulo = 0;
-                tiempoInicio = Date.now();
-                girando = false;
-                estelaRojo = [];  // <--- Agrega esto
-                estelaAzul = [];  // <--- Agrega esto
-            } else {
-                girando = true;
-                let rect = canvas.getBoundingClientRect();
-                let clicX = e.clientX - rect.left;
-                direccion = (clicX < canvas.width / 2) ? -1 : 1;
-            }
-        });
+    if (estado === 'inicio' || estado === 'gameover') {
+        // --- INICIAR EL JUEGO ---
+        estado = 'jugando';
+        obstaculos = [];
+        velocidad = 2;
+        angulo = 0;
+        tiempoInicio = Date.now();
+        girando = false;
+        estelaRojo = [];
+        estelaAzul = [];
+    } else if (estado === 'jugando') {
+        // --- LÓGICA DE GIRO ---
+        girando = true;
+        let rect = canvas.getBoundingClientRect();
+        let clicX = e.clientX - rect.left;
+        direccion = (clicX < canvas.width / 2) ? -1 : 1;
+    }
+});
 
         window.addEventListener('mouseup', () => girando = false);
         window.addEventListener('mouseout', () => girando = false);
