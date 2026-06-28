@@ -15,7 +15,7 @@
         let estado = 'jugando'; // Nuevo estado
         // 1. DECLARACIÓN
         let girando = false;
-        let velocidadGiro = 0.15; // Velocidad de giro cuando mantienes presionado
+        let velocidadGiro = 0.08; // Velocidad de giro cuando mantienes presionado
         let direccion = 1; // 1 para horario, -1 para anti-horario
         let tiempoInicio = 0;
         const canvas = document.getElementById('juegoCanvas');
@@ -128,22 +128,17 @@ function verificarColision(puntoX, puntoY, obs) {
       // Cuando presionas el mouse o la pantalla:
 window.addEventListener('mousedown', (e) => {
     if (estado === 'gameover') {
-        // Lógica de reinicio que ya tenías
         estado = 'jugando';
         obstaculos = [];
         velocidad = 2;
         angulo = 0;
         tiempoInicio = Date.now();
     } else {
-        girando = true; // Empezamos a girar
-        // Si haces clic a la izquierda, giramos a un lado. A la derecha, al otro.
-        direccion = (e.clientX < canvas.width / 2) ? -1 : 1;
+        girando = true;
+        // Si haces clic en la mitad izquierda, direccion es -1. 
+        // Si es a la derecha, es 1.
+        direccion = (e.clientX < (canvas.getBoundingClientRect().left + canvas.width / 2)) ? -1 : 1;
     }
-});
-
-// Cuando sueltas el botón del mouse:
-window.addEventListener('mouseup', () => {
-    girando = false; // Nos detenemos
 });
         // 4. ARRANQUE
         tiempoInicio = Date.now();
